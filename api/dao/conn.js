@@ -33,6 +33,14 @@ function User(user){
   this.type = user.type;
   this.address = user.address;
 }
+User.prototype.add = function(callback){
+  var sql = 'insert into user(id,name,age,phone,address,type,password,sex) values(4,?,25,?,?,1,12345,1)' ;
+  excuteSql(sql,[this.name,this.phone,this.address],callback)
+};
+User.prototype.delete = function(callback){
+  var sql = 'delete from user where id = ?' ;
+  excuteSql(sql,[this.id],callback)
+};
 User.prototype.getUserbyUsername = function(callback){
     var sql = 'select id,name,password,phone,type,address from user where name = ?' ;
     excuteSql(sql,[this.name],callback)

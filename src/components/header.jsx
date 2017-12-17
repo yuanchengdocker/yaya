@@ -10,9 +10,6 @@ class Header extends React.Component{
         super(props)
         let user = getUser();
         let self = this;
-        ep.on("profile-box-flag",function(flag){
-            self.userProfileSet(flag)
-        });
         ep.on("update-user-flag",function(user){
             self.updateUser(user)
         });
@@ -38,7 +35,7 @@ class Header extends React.Component{
     render(){
         return (
             <header className="main-header">
-                <Profile visible={this.state.visible} user={this.state.user}/>
+                <Profile flag={"update"} sucFn={this.updateUser.bind(this)} visibleFn={this.userProfileSet.bind(this)} visible={this.state.visible} user={this.state.user}/>
                 <a href="#/index" className="logo">
                 <span className="logo-mini"><b>A</b>LT</span>
                 <span className="logo-lg"><b>Admin</b>LTE</span>
@@ -66,10 +63,10 @@ class Header extends React.Component{
                         </li>
                         <li className="user-footer">
                             <div className="pull-left">
-                            <a href="#" className="btn btn-default btn-flat" onClick={this.userProfileSet.bind(this,true)}>Profile</a>
+                            <a  className="btn btn-default btn-flat" onClick={this.userProfileSet.bind(this,true)}>Profile</a>
                             </div>
                             <div className="pull-right">
-                            <a href="#" className="btn btn-default btn-flat" onClick={this.userLogOut.bind(this)}>Sign out</a>
+                            <a className="btn btn-default btn-flat" onClick={this.userLogOut.bind(this)}>Sign out</a>
                             </div>
                         </li>
                         </ul>

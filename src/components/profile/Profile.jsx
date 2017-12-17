@@ -9,10 +9,11 @@ import {getUser,setUser,setToken,delUser} from '../userInit'
 class Profile extends React.Component{
     constructor(props){
         super(props)
-        const { visible,user } = this.props;
+        const { visible,user,visibleFn,flag,sucFn } = this.props;
         this.state={
           visible:visible,
-          user:user,
+          flag:flag,
+          user:user||{},
           isUpdateSecret:false,
           addrArr:[{
             value: '1',
@@ -69,40 +70,52 @@ class Profile extends React.Component{
         visible:false
       })
       resetFields();
-      ep.emit("profile-box-flag", false);
+      this.props.visibleFn(false);
     }
     profileSubmit(e){
       e.preventDefault();
       this.props.form.validateFieldsAndScroll(async (err, values) => {
         if (!err) {
           console.log('Received values of form: ', values);
-          let isUpdate = false;
-          for(let param in values){
-             if(values[param] != this.state.user[param]){
-              isUpdate = true;
-              break;
-             }
-          }
-          if(!isUpdate) {
-            notification['warn']({
-                message: '修改失败',
-                description: "未作任何修改！",
-            });
-            return;
-          }
-          values["id"] = this.state.user.id;
-          values["updateSecreate"] = this.state.isUpdateSecret;
-          let {data,messgage} = await axiosAjax(["user","update"],values,"post")
-          if(data){
-            let {data} = await axiosAjax(["user","info"],values,"post")
-            setUser(data&&data.user)
-            this.hiddenModule()
+          if(this.state.flag=="update"){
+            let isUpdate = false;
+            for(let param in values){
+               if(values[param] != this.state.user[param]){
+                isUpdate = true;
+                break;
+               }
+            }
+            if(!isUpdate) {
+              notification['warn']({
+                  message: '修改失败',
+                  description: "未作任何修改！",
+              });
+              return;
+            }
+            values["id"] = this.state.user.id;
+            values["updateSecreate"] = this.state.isUpdateSecret;
+            user["isUpdate"] = true;
+            user["valid"] = "name";
+            let {data,messgage} = await axiosAjax(["user","update"],values,"post")
+            if(data){
+              let {data} = await axiosAjax(["user","info"],values,"post")
+              setUser(data&&data.user)
+              this.hiddenModule()
+            }else{
+              notification['warn']({
+                  message: '修改失败',
+                  description: messgage,
+              });
+            }
+
           }else{
-            notification['warn']({
-                message: '修改失败',
-                description: messgage,
-            });
+            let {data} = await axiosAjax(["user","add"],values,"post")
+            if(data){
+              this.props.sucFn();
+              this.hiddenModule()
+            }
           }
+
         }
       });
     }
@@ -113,7 +126,7 @@ class Profile extends React.Component{
     }
     nameValid = async (rule, value, callback) => {
       let param = {
-        id : this.state.user.id,
+        id : this.state.user?this.state.user.id:"",
         name : value,
         valid : "name"
       }
@@ -131,11 +144,11 @@ class Profile extends React.Component{
         addrArr.push(<Select.Option key={i} value={addr.value}>{addr.label}</Select.Option>);
       }
       const { getFieldDecorator,resetFields } = this.props.form;
-      let user = this.state.user;
+      let user = this.state.user||{};
       return (
         <Modal
           visible={this.state.visible}
-          title="修改个人信息"
+          title={this.state.flag=="add"?"新增个人信息":"修改个人信息"}
           okText="保存"
           onCancel={this.hiddenModule.bind(this)}
           onOk={this.profileSubmit.bind(this)}
@@ -175,11 +188,15 @@ class Profile extends React.Component{
                   </Select>
                 )}
             </FormItem>
-            <a href="#" onClick={this.showUpdateSecrete.bind(this)} style={{marginBottom:20,display:"block"}}>
-              {
-                this.state.isUpdateSecret?"关闭修改密码":"修改密码"
-              }
-            </a>
+            {
+              this.state.flag=="update"?
+              <a href="#" onClick={this.showUpdateSecrete.bind(this)} style={{marginBottom:20,display:"block"}}>
+                {
+                  this.state.isUpdateSecret?"关闭修改密码":"修改密码"
+                }
+              </a>
+              :""
+            }
             {
               this.state.isUpdateSecret?
               <div>

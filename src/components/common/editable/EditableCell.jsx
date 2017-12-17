@@ -6,6 +6,7 @@ class EditableCell extends React.Component {
   state = {
     value: this.props.value,
     editable: this.props.editable || false,
+    onChange:this.props.onChange
   }
   componentWillReceiveProps(nextProps) {
     if (nextProps.editable !== this.state.editable) {
@@ -30,6 +31,7 @@ class EditableCell extends React.Component {
   handleChange(e) {
     const value = e.target.value;
     this.setState({ value });
+    this.state.onChange(value)
   }
   render() {
     const { value, editable } = this.state;
@@ -39,6 +41,7 @@ class EditableCell extends React.Component {
           editable ?
             <div>
               <Input
+                key={this.props.key}
                 value={value}
                 onChange={e => this.handleChange(e)}
               />

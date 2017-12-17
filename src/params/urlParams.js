@@ -9,7 +9,9 @@ export var urlPath = {
         login:bashPath+"/user/login",
         update:bashPath+"/user/update",
         info:bashPath+"/user/info",
-        list:bashPath+"/user/list"
+        list:bashPath+"/user/list",
+        delete:bashPath+"/user/delete",
+        add:bashPath+"/user/add"
     }
 }
     

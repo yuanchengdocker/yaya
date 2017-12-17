@@ -20,7 +20,9 @@ var devConfig = {
         user_login:basePath+"/user/login",
         user_update:basePath+"/user/update",
         user_info:basePath+"/user/info",
-        user_list:basePath+"/user/list"
+        user_list:basePath+"/user/list",
+        user_delete:basePath+"/user/delete",
+        user_add:basePath+"/user/add"
     }
 }
 
@@ -42,7 +44,9 @@ var proConfig = {
         user_login:basePath+"/user/login",
         user_update:basePath+"/user/update",
         user_info:basePath+"/user/info",
-        user_list:basePath+"/user/list"
+        user_list:basePath+"/user/list",
+        user_delete:basePath+"/user/delete",
+        user_add:basePath+"/user/add"
     }
 }
 

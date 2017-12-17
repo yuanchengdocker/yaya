@@ -63,7 +63,26 @@ router.post('/api/auth',function(req,res){
         return false
     }
 })
-
+router.post(urlPath.user_add, function(req, res) {
+    res.writeHead(200,{'Content-Type':'text/html;charset=utf-8'})
+    var newUser= new dao.user(req.body)
+    newUser.add(function(err,user){
+        errCheck(err,res);
+        if (user) {
+            res.end(JSON.stringify({ code: 1000, data:user }))
+        }
+    })
+})
+router.post(urlPath.user_delete, function(req, res) {
+    res.writeHead(200,{'Content-Type':'text/html;charset=utf-8'})
+    var newUser= new dao.user(req.body)
+    newUser.delete(function(err,user){
+        errCheck(err,res);
+        if (user) {
+            res.end(JSON.stringify({ code: 1000, data:user }))
+        }
+    })
+})
 router.post(urlPath.user_list, function(req, res) {
     res.writeHead(200,{'Content-Type':'text/html;charset=utf-8'})
     var newPage = new dao.page(req.body)
@@ -76,22 +95,7 @@ router.post(urlPath.user_list, function(req, res) {
     },total)
 })
 
-router.post(urlPath.user_info, function(req, res) {
-    res.writeHead(200,{'Content-Type':'text/html;charset=utf-8'})
-    var newUser = new dao.user(req.body)
-    var valid = req.body.valid;
-    newUser.getUserbyId(function(err,user){
-        errCheck(err,res);
-        if (user && user.length > 0) {
-            if(user instanceof Array) user = user[0];
-            delete user.password;
-            var data = {'user':user}
-            res.end(JSON.stringify({ code: 1000, data: data }))
-        } else {
-            res.end(JSON.stringify({ code: 1002, messgage: "用户不存在" }))
-        }
-    },valid)
-})
+router.post(urlPath.user_info, getOrValidUser)
 
 router.post(urlPath.user_login, function(req, res) {
     res.writeHead(200,{'Content-Type':'text/html;charset=utf-8'})
@@ -113,8 +117,8 @@ router.post(urlPath.user_login, function(req, res) {
     })
 })
 
+router.post(urlPath.user_update,getOrValidUser);
 router.post(urlPath.user_update, function(req,res){
-    res.writeHead(200,{'Content-Type':'text/html;charset=utf-8'})
     var newUser = new dao.user(req.body)
     var oldPass = req.body.oldPass;
     var updateSecreate = req.body.updateSecreate;
@@ -142,7 +146,26 @@ router.post(urlPath.user_update, function(req,res){
         })
     }
 })
-
+function getOrValidUser(req, res,next) {
+    res.writeHead(200,{'Content-Type':'text/html;charset=utf-8'})
+    var newUser = new dao.user(req.body)
+    var valid = req.body.valid;
+    var isUpdate = req.body.isUpdate;
+    newUser.getUserbyId(function(err,user){
+        errCheck(err,res);
+        if (user && user.length > 0) {
+            if(user instanceof Array) user = user[0];
+            delete user.password;
+            var data = {'user':user}
+            isUpdate?
+            res.end(JSON.stringify({ code: 1002, messgage: "用户名已存在" }))
+            :
+            res.end(JSON.stringify({ code: 1000, data: data }))
+        } else {
+            isUpdate?next():res.end(JSON.stringify({ code: 1002, messgage: "用户不存在" }))
+        }
+    },valid)
+}
 function checkLogin(req, res, next) {
     var token = req.cookies[config.cookieName] && decrypt(req.cookies[config.cookieName])
     if( token ){

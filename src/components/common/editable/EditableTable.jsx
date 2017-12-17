@@ -9,23 +9,26 @@ class EditableTable extends React.Component {
       title: 'name',
       dataIndex: 'name',
       width: '25%',
+      editable:true,
       render: (text, record, index) => this.renderColumns(this.state.data, index, 'name', text),
     }, {
       title: 'age',
       dataIndex: 'age',
       width: '15%',
+      editable:true,
       render: (text, record, index) => this.renderColumns(this.state.data, index, 'age', text),
     }, {
       title: 'address',
       dataIndex: 'address',
       width: '40%',
+      editable:true,
       render: (text, record, index) => this.renderColumns(this.state.data, index, 'address', text),
     }, {
       title: 'operation',
       dataIndex: 'operation',
       width: '30%',
       render: (text, record, index) => {
-        const { editable } = this.state.data[index].name;
+        const editable = this.state.data[index].editable;
         return (
           <div className="editable-row-operations">
             {
@@ -52,117 +55,78 @@ class EditableTable extends React.Component {
     }];
     this.state = {
       pagination:this.props.pagination,
-      count:1,
-      data: [{
-        key: '0',
-        name: {
-          editable: false,
-          value: 'Edward King 0',
-        },
-        age: {
-          editable: false,
-          value: '32',
-        },
-        address: {
-          value: 'London, Park Lane no. 0',
-        },
-      }],
+      data:this.props.data,
+      activeFn:this.props.activeFn
     };
   }
+
+  componentWillReceiveProps(nextProps) {
+    this.setState({
+      pagination:nextProps.pagination,
+      data:nextProps.data
+    }) 
+  }
+
   renderColumns(data, index, key, text) {
-    const { editable, status } = data[index][key];
-    if (typeof editable === 'undefined') {
-      return text;
-    }
+    const value = data[index][key];
+    const editable = data[index].editable;
+    const status = data[index].status;
+    
     return (<EditableCell
-      editable={editable}
-      value={text}
+      editable={editable||false}
+      value={value||""}
       onChange={value => this.handleChange(key, index, value)}
       status={status}
     />);
   }
   handleChange(key, index, value) {
     const { data } = this.state;
-    data[index][key].value = value;
+    data[index][key] = value;
     this.setState({ data });
   }
   edit(index) {
     const { data } = this.state;
-    Object.keys(data[index]).forEach((item) => {
-      if (data[index][item] && typeof data[index][item].editable !== 'undefined') {
-        data[index][item].editable = true;
-      }
-    });
+    data[index].editable = true;
+    data[index].status = "";
     this.setState({ data });
   }
   delete(index){
-    const { data } = this.state;
-    let newData = data&&data.filter((item)=>{
-      return item.key != index;
+    let self = this;
+    const { data,activeFn } = this.state;
+    activeFn.delete(data[index],function(){
+      data.splice(index,1)
+      self.setState({ data });
     })
-    this.setState({ data:newData });
   }
   editDone(index, type) {
-    const { data } = this.state;
-    Object.keys(data[index]).forEach((item) => {
-      if (data[index][item] && typeof data[index][item].editable !== 'undefined') {
-        data[index][item].editable = false;
-        data[index][item].status = type;
-      }
-    });
-    this.setState({ data }, () => {
-      Object.keys(data[index]).forEach((item) => {
-        if (data[index][item] && typeof data[index][item].editable !== 'undefined') {
-          delete data[index][item].status;
-        }
-      });
-    });
+    const { data,activeFn } = this.state;
+    let self = this;
+    if(type == "save"){
+      activeFn.update(data[index],index,function(){
+        data[index].editable = false;
+        data[index].status = "save";
+        self.setState({ data });
+      })
+    }else{
+      data[index].editable = false;
+      data[index].status = "cancel";      
+      this.setState({ data });
+    }
   }
-  handleAdd = () => {
-    const { count, data } = this.state;
-    const newData = {
-      key: count,
-      name: `Edward King ${count}`,
-      age: 32,
-      address: `London, Park Lane no. ${count}`,
-
-      key: count,
-      name: {
-        editable: false,
-        value: `Edward King ${count}`,
-      },
-      age: {
-        editable: false,
-        value: '32',
-      },
-      address: {
-        value: 'London, Park Lane no. 0',
-      },
-
-
-    };
-    this.setState({
-      data: [...data, newData],
-      count: count + 1,
-    });
-  }
+  
   showTabelsChange(){
     console.log(arguments)
   }
   render() {
-    const { data } = this.state;
-    const dataSource = data.map((item) => {
-      const obj = {};
-      Object.keys(item).forEach((key) => {
-        obj[key] = key === 'key' ? item[key] : item[key].value;
-      });
-      return obj;
+    const { data,pagination } = this.state;
+    const dataSource = data.map((item,index) => {
+      item.key = index;
+      return item;
     });
     const columns = this.columns;
 
     return <div>
-      <Button className="editable-add-btn" onClick={this.handleAdd}>Add</Button>
-      <Table bordered dataSource={dataSource} columns={columns} pagination={this.state.pagination} onChange={this.showTabelsChange.bind(this)}/>
+      <Table bordered dataSource={dataSource} columns={columns} pagination={pagination} onChange={this.showTabelsChange.bind(this)}/>
     </div>
   }
 }

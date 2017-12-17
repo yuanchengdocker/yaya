@@ -7,6 +7,11 @@ import _isEmpty from 'lodash/isEmpty'
 axios.defaults.baseURL = 'http://localhost:8888';
 axios.defaults.headers.post['Content-Type'] = 'application/json';
 
+export function deepClone(initalObj) {
+    var obj = {};
+    obj = JSON.parse(JSON.stringify(initalObj));
+    return obj;
+}
 
 function objToQuery(params) {
     let keys = Object.keys(params);
