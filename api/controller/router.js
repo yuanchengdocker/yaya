@@ -28,29 +28,17 @@ router.all('*', function(req, res, next) {
     res.header('Access-Control-Allow-Origin', '*')
     res.header('Access-Control-Allow-Headers', 'Content-Type')
     res.header('Access-Control-Allow-Credentials', true) //支持跨域传cookie
-    console.log(req.session,req.cookies,req.originalUrl)
     next()
-
 })
-
 router.get('*', function(req, res, next) {
-    
     if(req.url.indexOf('/api')>-1||req.url.indexOf('/images')>-1||req.url.indexOf('favicon.ico')>-1){
         next()
-    }else{
-        
     }
-
 })
-
 router.post('*', function(req, res, next) {
-    
     if(req.url.indexOf('/api')>-1||req.url.indexOf('/images')>-1||req.url.indexOf('favicon.ico')>-1){
         next()
-    }else{
-        
     }
-
 })
 
 router.post('/api/auth',function(req,res){
@@ -76,34 +64,45 @@ router.post('/api/auth',function(req,res){
     }
 })
 
-router.get('/api/getUserInfo', function(req, res) {
-    
-    if (req.cookies[config.cookieName]) {
-        var cookies = JSON.parse(req.cookies[config.cookieName])
-        var data = { name: cookies[config.cookieName].name }
-        return res.json({ code: 1000, messgage: "已登录", data: data })
-    } else {
-        return res.json({ code: 1001, messgage: "未登录" })
-    }
+router.post(urlPath.user_list, function(req, res) {
+    res.writeHead(200,{'Content-Type':'text/html;charset=utf-8'})
+    var newPage = new dao.page(req.body)
+    var total = 0;
+    newPage.query(function(err,page,param){
+        errCheck(err,res);
+        if (page) {
+            res.end(JSON.stringify({ code: 1000, data: page,total:param }))
+        }
+    },total)
+})
 
+router.post(urlPath.user_info, function(req, res) {
+    res.writeHead(200,{'Content-Type':'text/html;charset=utf-8'})
+    var newUser = new dao.user(req.body)
+    var valid = req.body.valid;
+    newUser.getUserbyId(function(err,user){
+        errCheck(err,res);
+        if (user && user.length > 0) {
+            if(user instanceof Array) user = user[0];
+            delete user.password;
+            var data = {'user':user}
+            res.end(JSON.stringify({ code: 1000, data: data }))
+        } else {
+            res.end(JSON.stringify({ code: 1002, messgage: "用户不存在" }))
+        }
+    },valid)
 })
 
 router.post(urlPath.user_login, function(req, res) {
     res.writeHead(200,{'Content-Type':'text/html;charset=utf-8'})
-
     var newUser = new dao.user(req.body)
-    newUser.getUserbyUsername(newUser.username, function(err, user) {
-        if (err) {
-            res.end(JSON.stringify({ code: 1009, messgage: err }))
-        }
-        if (user) {
-            if(user instanceof Array)
-                user = user[0];
+    newUser.getUserbyUsername(function(err, user) {
+        errCheck(err,res);
+        if (user && user.length > 0) {
+            user = user[0];
             if (user.password == newUser.password) {
-                var token = encrypt(user._id,user.name)
-                //res.cookie(config.cookieName,JSON.stringify(user))
-                var data = {'userName':user.name,'token':token}
-
+                var token = encrypt(user.id,user.name)
+                var data = {'user':user,'token':token}
                 res.end(JSON.stringify({ code: 1000, messgage: "登录成功", data: data }))
             } else {
                 res.end(JSON.stringify({ code: 1001, messgage: "密码错误" }))
@@ -112,7 +111,36 @@ router.post(urlPath.user_login, function(req, res) {
             res.end(JSON.stringify({ code: 1002, messgage: "用户名不存在" }))
         }
     })
+})
 
+router.post(urlPath.user_update, function(req,res){
+    res.writeHead(200,{'Content-Type':'text/html;charset=utf-8'})
+    var newUser = new dao.user(req.body)
+    var oldPass = req.body.oldPass;
+    var updateSecreate = req.body.updateSecreate;
+    if(!newUser.id) paramsErr();
+    if(updateSecreate){
+        newUser.getUserbyId(function(err,user){
+            if (user) {
+                if(user instanceof Array) user = user[0];
+                //先校验原密码是否正确
+                if (user.password == oldPass) {
+                    //开始更新密码和其他信息
+                    newUser.updateUserById(true,function(err, result) {
+                        errCheck(err,res);
+                        res.end(JSON.stringify({ code: 1000, data:result.changedRows&&true }))
+                    })
+                }else{
+                    res.end(JSON.stringify({ code: 1001, messgage: "输入原密码错误" }))
+                }
+            }
+        })
+    }else{
+        newUser.updateUserById(false,function(err, result) {
+            errCheck(err,res);
+            res.end(JSON.stringify({ code: 1000, data:result.changedRows&&true }))
+        })
+    }
 })
 
 function checkLogin(req, res, next) {
@@ -145,6 +173,16 @@ function checkNotLogin(req, res, next) {
 
 function auth(token,callback){
     dao.user.getUserbyUsername()
+}
+
+function errCheck(err,res){
+    if (err) {
+        res.end(JSON.stringify({ code: 1009, messgage: err }))
+    }
+}
+
+function paramsErr(){
+    res.end(JSON.stringify({ code: 2009, messgage: "参数异常" }))
 }
 
 module.exports = router

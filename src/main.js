@@ -4,7 +4,6 @@
  * @date    2017-05-31 16:42:35
  * @description 主入口模块
  */
-
 import React from 'react'
 import ReactDOM from 'react-dom'
 import 'babel-polyfill';//对于IE9 es6中像Object.assign函数的转es5
@@ -13,34 +12,55 @@ import 'babel-polyfill';//对于IE9 es6中像Object.assign函数的转es5
 import { Router, Route, Link, hashHistory, IndexRoute, Redirect, IndexLink,browserHistory} from 'react-router'
 
 import style1 from './css/base.styl';
-
+import pages from './params/pageParams'
 import Header from './components/Header'
 import Menu from './components/menu'
-import Index from './components/index/index'
-import Index2 from './components/index/index2'
+import Login from './components/login/Login'
+import {getUser} from './components/userInit'
+import {ep} from './utils/create-events'
 
 class main extends React.Component{
     constructor(props){
-        super(props)
+		super(props)
+		let self = this;
+		ep.on("is_login_flag",function(user){
+			self.setLoginPage(user)
+		});
+		var user = getUser();
+		self.setLoginPage(user&&true)
     }
-	componentDidMount () {
-		
-	}
-	componentDidUpdate (prevProps, prevState) {
-		
+	setLoginPage(flag){
+		if(!this.state){
+			this.state = {
+				isUser:flag
+			}
+		}else{
+			this.setState({
+				isUser:flag
+			})
+		}
 	}
     render(){
+		let isUser = this.state.isUser
         return (
             <div className="wrapper">
-				<header className="main-header">
-					<Header/>
-				</header>
-				<aside className="main-sidebar">
-					<Menu/>
-				</aside>
-				<section className="content-wrapper">
-					{this.props.children}
-				</section>
+				<div className={isUser?"hidden-login main-login":"main-login"}>
+					{
+						isUser?"":<Login/>
+					}
+				</div>
+				
+				<div className={isUser?"main-content show-content":"main-content"}>
+						<header className="main-header" style={{zIndex:900}}>
+							<Header/>
+						</header>
+						<aside className="main-sidebar">
+							<Menu/>
+						</aside>
+						<section className="content-wrapper">
+							{this.props.children}
+						</section>
+					</div>
 			</div>
         )
     }
@@ -50,8 +70,12 @@ class main extends React.Component{
 ReactDOM.render((
     <Router history={hashHistory} >
         <Route path="/" component={main}>
-			<Route path="index" component={Index}/>
-			<Route path="index2" component={Index2}/>
+			<IndexRoute getComponent={pages[0]&&pages[0].com}/>
+			{
+				pages.map((page,index)=>{
+					return <Route key={index} path={page.path} getComponent={page.com}/>
+				})
+			}
         </Route>
     </Router>
 ), document.getElementById('root'));

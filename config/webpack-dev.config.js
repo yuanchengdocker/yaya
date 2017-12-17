@@ -20,7 +20,8 @@ module.exports = {
     //输出文件目录，名称
     output: {
         path: rootPath + '/dist',
-        filename: '[name].js'
+        filename: '[name].js',
+        chunkFilename: '[name].[chunkhash:5].chunk.js',
     },
     //自动扩展文件后缀名，require模块可以省略不写后缀名
     resolve: {

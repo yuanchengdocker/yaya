@@ -12,6 +12,7 @@
     "es5-shim": "^4.5.9",
     "es6-promise": "^4.1.0",
     "es6-shim": "^0.35.2",
+    "eventproxy": "^1.0.0",
     "express": "4.10.2",
     "express-session": "1.9.1",
     "fetch-ie8": "^1.4.3",

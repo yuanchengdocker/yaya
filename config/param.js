@@ -17,7 +17,10 @@ var devConfig = {
     expires:'30',			//cookie失效时间（天）
     jwtSecret:'hechuanhua',	//jwt加密钥匙
     urlPath:{
-        user_login:basePath+"/user/login"
+        user_login:basePath+"/user/login",
+        user_update:basePath+"/user/update",
+        user_info:basePath+"/user/info",
+        user_list:basePath+"/user/list"
     }
 }
 
@@ -36,7 +39,10 @@ var proConfig = {
     expires:'30',			//cookie失效时间（天）
     jwtSecret:'hechuanhua',	//jwt加密钥匙
     urlPath:{
-        user_login:basePath+"/user/login"
+        user_login:basePath+"/user/login",
+        user_update:basePath+"/user/update",
+        user_info:basePath+"/user/info",
+        user_list:basePath+"/user/list"
     }
 }
 

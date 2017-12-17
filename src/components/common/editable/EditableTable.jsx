@@ -51,6 +51,7 @@ class EditableTable extends React.Component {
       },
     }];
     this.state = {
+      pagination:this.props.pagination,
       count:1,
       data: [{
         key: '0',
@@ -145,6 +146,9 @@ class EditableTable extends React.Component {
       count: count + 1,
     });
   }
+  showTabelsChange(){
+    console.log(arguments)
+  }
   render() {
     const { data } = this.state;
     const dataSource = data.map((item) => {
@@ -158,7 +162,7 @@ class EditableTable extends React.Component {
 
     return <div>
       <Button className="editable-add-btn" onClick={this.handleAdd}>Add</Button>
-      <Table bordered dataSource={dataSource} columns={columns} />;
+      <Table bordered dataSource={dataSource} columns={columns} pagination={this.state.pagination} onChange={this.showTabelsChange.bind(this)}/>
     </div>
   }
 }
