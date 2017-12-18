@@ -25,16 +25,6 @@ app.use(function(err, req, res, next) {
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }))
 app.use(cookieParser(config.cookieName))
-// app.use(session({
-//     secret: 'myblog', //用来对session数据进行加密的字符串，必须。通过设置的 secret 字符串，来计算 hash 值并放在 cookie 中，使产生的 signedCookie 防篡改
-//     key: 'blog', //字符串,用于指定用来保存session的cookie名称,默认为coomect.sid.
-//     cookie: { maxAge: 1000 * 60 * 60 * 24 * 5 },
-//     resave: true,
-//     saveUninitialized: true,
-//     store: new mongoConnect({ //属性值为一个用来保存session数据的第三方存储对象
-//         url: 'mongodb://'+config.mongoDbHost+':'+config.mongoDbPort+'/'+config.mongoDbName
-//     })
-// }))
 
 app.all('*',router)
 app.listen(app.get('port'), function() {

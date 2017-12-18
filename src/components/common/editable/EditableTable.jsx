@@ -5,65 +5,56 @@ import EditableCell from './EditableCell'
 class EditableTable extends React.Component {
   constructor(props) {
     super(props);
-    this.columns = [{
-      title: 'name',
-      dataIndex: 'name',
-      width: '25%',
-      editable:true,
-      render: (text, record, index) => this.renderColumns(this.state.data, index, 'name', text),
-    }, {
-      title: 'age',
-      dataIndex: 'age',
-      width: '15%',
-      editable:true,
-      render: (text, record, index) => this.renderColumns(this.state.data, index, 'age', text),
-    }, {
-      title: 'address',
-      dataIndex: 'address',
-      width: '40%',
-      editable:true,
-      render: (text, record, index) => this.renderColumns(this.state.data, index, 'address', text),
-    }, {
-      title: 'operation',
-      dataIndex: 'operation',
-      width: '30%',
-      render: (text, record, index) => {
-        const editable = this.state.data[index].editable;
-        return (
-          <div className="editable-row-operations">
-            {
-              editable ?
-                <span>
-                  <Popconfirm title="Sure to Save?" onConfirm={() => this.editDone(index, 'save')}>
-                    <a>Save</a>
-                  </Popconfirm>
-                  <Popconfirm title="Sure to cancel?" onConfirm={() => this.editDone(index, 'cancel')}>
-                    <a>Cancel</a>
-                  </Popconfirm>
-                </span>
-                :
-                <span>
-                  <a onClick={() => this.edit(index)}>Edit</a>
-                  <Popconfirm title="Sure to Delete?" onConfirm={() => this.delete(index)}>
-                    <a>Delete</a>
-                  </Popconfirm>
-                </span>
-            }
-          </div>
-        );
-      },
-    }];
+    let {hiddenOpt,columns} = this.props;
+    let self = this;
+    columns&&columns.map((item)=>{
+        item.render = (text, record, index) => self.renderColumns(self.state.data, index, item.dataIndex, text)
+    })
+    this.columns = columns||[];
+
+    if(!hiddenOpt){
+        this.columns.push({
+          title: 'operation',
+          dataIndex: 'operation',
+          width: '30%',
+          render: (text, record, index) => {
+            const editable = this.state.data[index].editable;
+            return (
+              <div className="editable-row-operations">
+                {
+                  editable ?
+                    <span>
+                      <Popconfirm title="Sure to Save?" onConfirm={() => this.editDone(index, 'save')}>
+                        <a>Save</a>
+                      </Popconfirm>
+                      <Popconfirm title="Sure to cancel?" onConfirm={() => this.editDone(index, 'cancel')}>
+                        <a>Cancel</a>
+                      </Popconfirm>
+                    </span>
+                    :
+                    <span>
+                      <a onClick={() => this.edit(index)}>Edit</a>
+                      <Popconfirm title="Sure to Delete?" onConfirm={() => this.delete(index)}>
+                        <a>Delete</a>
+                      </Popconfirm>
+                    </span>
+                }
+              </div>
+            );
+          },
+        })
+    }
     this.state = {
-      pagination:this.props.pagination,
-      data:this.props.data,
-      activeFn:this.props.activeFn
+      pagination:this.props.pagination||{},
+      data:this.props.data||[],
+      activeFn:this.props.activeFn||{}
     };
   }
 
   componentWillReceiveProps(nextProps) {
     this.setState({
-      pagination:nextProps.pagination,
-      data:nextProps.data
+      pagination:nextProps.pagination||{},
+      data:nextProps.data||[]
     }) 
   }
 
@@ -114,8 +105,8 @@ class EditableTable extends React.Component {
     }
   }
   
-  showTabelsChange(){
-    console.log(arguments)
+  showTabelsChange(page){
+    this.state.activeFn.page(page);
   }
   render() {
     const { data,pagination } = this.state;

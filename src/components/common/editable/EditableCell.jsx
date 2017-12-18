@@ -9,6 +9,8 @@ class EditableCell extends React.Component {
     onChange:this.props.onChange
   }
   componentWillReceiveProps(nextProps) {
+    // this.cacheValue = nextProps.value;
+    this.setState({ value: nextProps.value });
     if (nextProps.editable !== this.state.editable) {
       this.setState({ editable: nextProps.editable });
       if (nextProps.editable) {

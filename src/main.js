@@ -11,7 +11,9 @@ import 'babel-polyfill';//对于IE9 es6中像Object.assign函数的转es5
 // 引入React-Router模块
 import { Router, Route, Link, hashHistory, IndexRoute, Redirect, IndexLink,browserHistory} from 'react-router'
 
-import style1 from './css/base.styl';
+import style1 from './css/reset.styl';
+import style2 from './css/main.styl';
+import style3 from './css/public.styl';
 import pages from './params/pageParams'
 import Header from './components/Header'
 import Menu from './components/menu'

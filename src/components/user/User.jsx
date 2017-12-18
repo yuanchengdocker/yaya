@@ -10,13 +10,14 @@ class User extends React.Component{
         this.state = {
             data:[],
             pagination:{
-                currentPage:1,
+                current:1,
                 pageSize:10,
                 total:0
             },
             activeFn:{
                 update:this.updateUser.bind(this),
-                delete:this.deleteUser.bind(this)
+                delete:this.deleteUser.bind(this),
+                page:this.getUserList.bind(this)
             },
             addVisible:false
         }
@@ -63,10 +64,10 @@ class User extends React.Component{
     componentDidMount() {
         this.getUserList();
     }
-    async getUserList(){
+    async getUserList(page){
         let param = {
-            currentPage:this.state.pagination.currentPage,
-            pageSize:this.state.pagination.pageSize,
+            currentPage:(page&&page.current)||this.state.pagination.current,
+            pageSize:(page&&page.pageSize)||this.state.pagination.pageSize,
             table:"user"
         }
         let {data,total} = await axiosAjax(["user","list"],param,"post")
@@ -75,7 +76,7 @@ class User extends React.Component{
             data:data,
             cacheData:cacheData,
             pagination:{
-                currentPage:param.currentPage,
+                current:param.currentPage,
                 pageSize:param.pageSize,
                 total:total
             }
@@ -90,10 +91,26 @@ class User extends React.Component{
         })
     }
     render(){
+        let columns = [{
+            title: 'name',
+            dataIndex: 'name',
+            width: '25%',
+            editable:true,
+        }, {
+            title: 'age',
+            dataIndex: 'age',
+            width: '15%',
+            editable:true,
+        }, {
+            title: 'address',
+            dataIndex: 'address',
+            width: '40%',
+            editable:true,
+        }];
         return <div>
             <Button className="editable-add-btn" onClick={this.userProfileSet.bind(this,true)}>Add</Button>
             <Profile flag={"add"} sucFn={this.getUserList.bind(this)} visibleFn={this.userProfileSet.bind(this)} visible={this.state.addVisible}/>
-            <EditableTable activeFn={this.state.activeFn} pagination={this.state.pagination} data={this.state.data}/>
+            <EditableTable activeFn={this.state.activeFn} columns={columns} pagination={this.state.pagination} data={this.state.data}/>
         </div>
     }
 }

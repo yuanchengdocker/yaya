@@ -34,7 +34,7 @@ function User(user){
   this.address = user.address;
 }
 User.prototype.add = function(callback){
-  var sql = 'insert into user(id,name,age,phone,address,type,password,sex) values(4,?,25,?,?,1,12345,1)' ;
+  var sql = 'insert into user(name,age,phone,address,type,password,sex) values(?,25,?,?,1,12345,1)' ;
   excuteSql(sql,[this.name,this.phone,this.address],callback)
 };
 User.prototype.delete = function(callback){

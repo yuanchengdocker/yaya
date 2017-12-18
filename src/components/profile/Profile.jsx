@@ -149,6 +149,7 @@ class Profile extends React.Component{
         <Modal
           visible={this.state.visible}
           title={this.state.flag=="add"?"新增个人信息":"修改个人信息"}
+          maskClosable={false}
           okText="保存"
           onCancel={this.hiddenModule.bind(this)}
           onOk={this.profileSubmit.bind(this)}
@@ -190,7 +191,7 @@ class Profile extends React.Component{
             </FormItem>
             {
               this.state.flag=="update"?
-              <a href="#" onClick={this.showUpdateSecrete.bind(this)} style={{marginBottom:20,display:"block"}}>
+              <a onClick={this.showUpdateSecrete.bind(this)} style={{marginBottom:20,display:"block"}}>
                 {
                   this.state.isUpdateSecret?"关闭修改密码":"修改密码"
                 }
