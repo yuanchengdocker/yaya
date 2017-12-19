@@ -94,11 +94,11 @@ class Profile extends React.Component{
             }
             values["id"] = this.state.user.id;
             values["updateSecreate"] = this.state.isUpdateSecret;
-            user["isUpdate"] = true;
-            user["valid"] = "name";
+            values["isUpdate"] = true;
+            values["valid"] = "name";
             let {data,messgage} = await axiosAjax(["user","update"],values,"post")
             if(data){
-              let {data} = await axiosAjax(["user","info"],values,"post")
+              let {data} = await axiosAjax(["user","info"],{id:values.id},"post")
               setUser(data&&data.user)
               this.hiddenModule()
             }else{
