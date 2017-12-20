@@ -24,6 +24,31 @@ Page.prototype.query = function(callback,total){
   })
 }
 
+function Member(member){
+  this.id = member.id;
+  this.name = member.name;
+  this.sex = member.sex;
+  this.phone = member.phone;
+}
+Member.prototype.add = function(callback){
+  var sql = 'insert into member(name,phone,sex) values(?,?,?)' ;
+  excuteSql(sql,[this.name,this.sex,this.phone],callback)
+};
+Member.prototype.delete = function(callback){
+  var sql = 'delete from member where id = ?' ;
+  excuteSql(sql,[this.id],callback)
+};
+Member.prototype.getMemberbyUsernameOrPhone = function(value,callback){
+    var sql = 'select * from member where name = ? or phone = ?' ;
+    excuteSql(sql,[value,value],callback)
+};
+Member.prototype.updateUserById = function(callback){
+  var arr = [this.name,this.phone,this.sex];
+  
+  var sql = 'update member set name=?,phone=?,sex=? where id ='+this.id ;
+  excuteSql(sql,arr,callback)
+}
+
 function User(user){
   this.id = user.id;
   this.name = user.name;
@@ -77,4 +102,5 @@ function excuteSql(sql,arr,callback,param){
 }
 dao.user = User;
 dao.page = Page;
+dao.member = Member;
 module.exports = dao;

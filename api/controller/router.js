@@ -42,7 +42,6 @@ router.post('*', function(req, res, next) {
 })
 
 router.post('/api/auth',function(req,res){
-
     var token = decrypt(req.body.token)
     if( token ){
         auth(token,function(err,user){
@@ -63,7 +62,7 @@ router.post('/api/auth',function(req,res){
         return false
     }
 })
-router.post(urlPath.user_add, function(req, res) {
+router.post(urlPath.user.add, function(req, res) {
     res.writeHead(200,{'Content-Type':'text/html;charset=utf-8'})
     var newUser= new dao.user(req.body)
     newUser.add(function(err,user){
@@ -73,7 +72,7 @@ router.post(urlPath.user_add, function(req, res) {
         }
     })
 })
-router.post(urlPath.user_delete, function(req, res) {
+router.post(urlPath.user.delete, function(req, res) {
     res.writeHead(200,{'Content-Type':'text/html;charset=utf-8'})
     var newUser= new dao.user(req.body)
     newUser.delete(function(err,user){
@@ -83,7 +82,7 @@ router.post(urlPath.user_delete, function(req, res) {
         }
     })
 })
-router.post(urlPath.user_list, function(req, res) {
+router.post(urlPath.user.list, function(req, res) {
     res.writeHead(200,{'Content-Type':'text/html;charset=utf-8'})
     var newPage = new dao.page(req.body)
     var total = 0;
@@ -95,9 +94,9 @@ router.post(urlPath.user_list, function(req, res) {
     },total)
 })
 
-router.post(urlPath.user_info, getOrValidUser)
+router.post(urlPath.user.info, getOrValidUser)
 
-router.post(urlPath.user_login, function(req, res) {
+router.post(urlPath.user.login, function(req, res) {
     res.writeHead(200,{'Content-Type':'text/html;charset=utf-8'})
     var newUser = new dao.user(req.body)
     newUser.getUserbyUsername(function(err, user) {
@@ -117,8 +116,8 @@ router.post(urlPath.user_login, function(req, res) {
     })
 })
 
-router.post(urlPath.user_update,getOrValidUser);
-router.post(urlPath.user_update, function(req,res){
+router.post(urlPath.user.update,getOrValidUser);
+router.post(urlPath.user.update, function(req,res){
     var newUser = new dao.user(req.body)
     var oldPass = req.body.oldPass;
     var updateSecreate = req.body.updateSecreate;
@@ -207,5 +206,38 @@ function errCheck(err,res){
 function paramsErr(){
     res.end(JSON.stringify({ code: 2009, messgage: "参数异常" }))
 }
+
+router.post(urlPath.member.add, function(req, res) {
+    res.writeHead(200,{'Content-Type':'text/html;charset=utf-8'})
+    var newMember= new dao.member(req.body)
+    newMember.add(function(err,member){
+        errCheck(err,res);
+        if (member) {
+            res.end(JSON.stringify({ code: 1000, data:member }))
+        }
+    })
+})
+router.post(urlPath.member.delete, function(req, res) {
+    res.writeHead(200,{'Content-Type':'text/html;charset=utf-8'})
+    var newMember= new dao.member(req.body)
+    newMember.delete(function(err,member){
+        errCheck(err,res);
+        if (member) {
+            res.end(JSON.stringify({ code: 1000, data:member }))
+        }
+    })
+})
+router.post(urlPath.member.list, function(req, res) {
+    res.writeHead(200,{'Content-Type':'text/html;charset=utf-8'})
+    var newPage = new dao.page(req.body)
+    var total = 0;
+    newPage.query(function(err,page,param){
+        errCheck(err,res);
+        if (page) {
+            res.end(JSON.stringify({ code: 1000, data: page,total:param }))
+        }
+    },total)
+})
+
 
 module.exports = router

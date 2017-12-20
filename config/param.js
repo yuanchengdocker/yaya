@@ -1,6 +1,6 @@
 var isDev = process.env.NODE_ENV == 'development'
 console.log(isDev,process.env.NODE_ENV)
-var basePath = "/api"
+var bashPath = "/api"
 
 var devConfig = {
     mysqlHost : 'localhost',
@@ -17,12 +17,20 @@ var devConfig = {
     expires:'30',			//cookie失效时间（天）
     jwtSecret:'hechuanhua',	//jwt加密钥匙
     urlPath:{
-        user_login:basePath+"/user/login",
-        user_update:basePath+"/user/update",
-        user_info:basePath+"/user/info",
-        user_list:basePath+"/user/list",
-        user_delete:basePath+"/user/delete",
-        user_add:basePath+"/user/add"
+        user:{
+            login:bashPath+"/user/login",
+            update:bashPath+"/user/update",
+            info:bashPath+"/user/info",
+            list:bashPath+"/user/list",
+            delete:bashPath+"/user/delete",
+            add:bashPath+"/user/add"
+        },
+        member:{
+            add:bashPath+"/member/add",
+            delete:bashPath+"/member/add",
+            update:bashPath+"/member/update",
+            list:bashPath+"/member/list"
+        }
     }
 }
 
@@ -41,12 +49,20 @@ var proConfig = {
     expires:'30',			//cookie失效时间（天）
     jwtSecret:'hechuanhua',	//jwt加密钥匙
     urlPath:{
-        user_login:basePath+"/user/login",
-        user_update:basePath+"/user/update",
-        user_info:basePath+"/user/info",
-        user_list:basePath+"/user/list",
-        user_delete:basePath+"/user/delete",
-        user_add:basePath+"/user/add"
+        user:{
+            login:bashPath+"/user/login",
+            update:bashPath+"/user/update",
+            info:bashPath+"/user/info",
+            list:bashPath+"/user/list",
+            delete:bashPath+"/user/delete",
+            add:bashPath+"/user/add"
+        },
+        member:{
+            add:bashPath+"/member/add",
+            delete:bashPath+"/member/add",
+            update:bashPath+"/member/update",
+            list:bashPath+"/member/list"
+        }
     }
 }
 

@@ -12,6 +12,12 @@ export var urlPath = {
         list:bashPath+"/user/list",
         delete:bashPath+"/user/delete",
         add:bashPath+"/user/add"
+    },
+    member:{
+        add:bashPath+"/member/add",
+        delete:bashPath+"/member/add",
+        update:bashPath+"/member/update",
+        list:bashPath+"/member/list"
     }
 }
     

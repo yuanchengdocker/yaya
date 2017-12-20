@@ -81,6 +81,7 @@ class Creater extends React.Component{
         reader.readAsBinaryString(file);
     }
     createrSubmit(){
+        console.log(this.state.fileData)
         this.props.sucFn();
     }
     hiddenModule(){

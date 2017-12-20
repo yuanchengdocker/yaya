@@ -74,6 +74,7 @@ class Login extends React.Component{
 	render() {
 		return (
 			<div className="LoginBg m-warpper">
+                <video src={"../../img/bg.mp4"} className="login-glass" autoplay={true} loop></video>
                 <div className="m-loginArea">
                     <h4>登录</h4>
                     <form>
