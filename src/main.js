@@ -30,11 +30,18 @@ class main extends React.Component{
 		});
 		var user = getUser();
 		self.setLoginPage(user&&true)
-    }
+	}
+	componentDidMount(){
+		let contentHeight =  document.body.clientHeight-document.getElementsByClassName("main-header")[0].clientHeight;
+		this.setState({
+			contentHeight:contentHeight
+		})
+	}
 	setLoginPage(flag){
 		if(!this.state){
 			this.state = {
-				isUser:flag
+				isUser:flag,
+				contentHeight:0
 			}
 		}else{
 			this.setState({
@@ -59,7 +66,7 @@ class main extends React.Component{
 						<aside className="main-sidebar">
 							<Menu/>
 						</aside>
-						<section className="content-wrapper">
+						<section className="content-wrapper" style={{height:this.state.contentHeight}}>
 							{this.props.children}
 						</section>
 					</div>

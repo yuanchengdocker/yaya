@@ -42,7 +42,7 @@ Member.prototype.getMemberbyUsernameOrPhone = function(value,callback){
     var sql = 'select * from member where name = ? or phone = ?' ;
     excuteSql(sql,[value,value],callback)
 };
-Member.prototype.updateUserById = function(callback){
+Member.prototype.updateMemberById = function(callback){
   var arr = [this.name,this.phone,this.sex];
   
   var sql = 'update member set name=?,phone=?,sex=? where id ='+this.id ;

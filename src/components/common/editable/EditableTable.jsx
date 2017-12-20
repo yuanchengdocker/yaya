@@ -84,10 +84,7 @@ class EditableTable extends React.Component {
   delete(index){
     let self = this;
     const { data,activeFn } = this.state;
-    activeFn.delete(data[index],function(){
-      data.splice(index,1)
-      self.setState({ data });
-    })
+    activeFn.delete(data[index])
   }
   editDone(index, type) {
     const { data,activeFn } = this.state;

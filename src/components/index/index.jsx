@@ -1,5 +1,5 @@
 import React from 'react'
-import {Button} from 'antd'
+import {Button,notification} from 'antd'
 import MemeberCreater from './member/Creater'
 import EditableTable from '../common/editable/EditableTable'
 import {axiosAjax} from '../../service/getService';
@@ -8,9 +8,46 @@ class Index extends React.Component{
     constructor(props){
         super(props)
         this.state={
+            data:[],
             singleVisibal:false,
-            batchVisibal:false
+            batchVisibal:false,
+            pagination:{
+                current:1,
+                pageSize:10,
+                total:0
+            },
+            activeFn:{
+                update:this.updateMember.bind(this),
+                delete:this.deleteMember.bind(this),
+                page:this.getMemberList.bind(this)
+            }
         }
+    }
+    async updateMember(member,index,callback){
+        
+        let {data,messgage} = await axiosAjax(["member","update"],member,"post")
+        if(data){
+            callback(data)
+        }else{
+            notification['warn']({
+                message: '修改失败',
+                description: messgage,
+            });
+        }
+    }
+    async deleteMember(member,callback){
+        let {data} = await axiosAjax(["member","delete"],member,"post")
+        if(data){
+            this.getMemberList();
+            callback&&callback();
+            notification['success']({
+                message: '成功',
+                description: "删除成功"
+            });
+        }
+    }
+    componentDidMount(){
+        this.getMemberList();
     }
     memberSingleAdd(){
 
@@ -18,8 +55,22 @@ class Index extends React.Component{
     memberBatchAdd(){
 
     }
-    getMemberList(){
-        console.log("getMemberList")
+    async getMemberList(page){
+        let param = {
+            currentPage:(page&&page.current)||this.state.pagination.current,
+            pageSize:(page&&page.pageSize)||this.state.pagination.pageSize,
+            table:"member"
+        }
+        let {data,total} = await axiosAjax(["member","list"],param,"post")
+        console.log(data)
+        this.setState({
+            data:data,
+            pagination:{
+                current:param.currentPage,
+                pageSize:param.pageSize,
+                total:total
+            }
+        })
     }
     memberCreaterVisibal(flag){
         this.setState({
@@ -33,8 +84,8 @@ class Index extends React.Component{
             width: '25%',
             editable:true,
         }, {
-            title: 'age',
-            dataIndex: 'age',
+            title: 'phone',
+            dataIndex: 'phone',
             width: '15%',
             editable:true,
         }, {
@@ -52,7 +103,7 @@ class Index extends React.Component{
                 <MemeberCreater sucFn={this.getMemberList.bind(this)} visibleFn={this.memberCreaterVisibal.bind(this)} visible={this.state.batchVisibal}/>
                 :""
             }
-            <EditableTable columns={columns}/>
+            <EditableTable activeFn={this.state.activeFn} columns={columns} pagination={this.state.pagination} data={this.state.data}/>
         </div>
     }
 }

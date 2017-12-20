@@ -238,6 +238,14 @@ router.post(urlPath.member.list, function(req, res) {
         }
     },total)
 })
+router.post(urlPath.member.update, function(req,res){
+    var newMember = new dao.member(req.body)
+    
+    newMember.updateMemberById(function(err, result) {
+        errCheck(err,res);
+        res.end(JSON.stringify({ code: 1000, data:result.changedRows&&true }))
+    })
+})
 
 
 module.exports = router

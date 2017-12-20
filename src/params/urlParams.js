@@ -15,7 +15,7 @@ export var urlPath = {
     },
     member:{
         add:bashPath+"/member/add",
-        delete:bashPath+"/member/add",
+        delete:bashPath+"/member/delete",
         update:bashPath+"/member/update",
         list:bashPath+"/member/list"
     }
