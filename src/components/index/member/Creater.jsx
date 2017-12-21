@@ -1,5 +1,5 @@
 import React from 'react'
-import {Button,Modal} from 'antd'
+import {Button,Modal,Icon} from 'antd'
 import XLSX from 'xlsx'
 import style from './Creater.styl'
 import EditableTable from '../../common/editable/EditableTable'
@@ -113,15 +113,15 @@ class Creater extends React.Component{
                 onOk={this.createrSubmit.bind(this)}>
                 <p>
                 <input className="ya-inline-block" type="file" name="xlfile" id="filexlf" onChange={this.fileLoadChange.bind(this)}/>
-                <Button onClick={this.clearFile.bind(this)}>清除</Button>
+                <span className="ya-pointer" onClick={this.clearFile.bind(this)}><Icon type="close" />清除</span>
                 </p>
 
                 <div>
-                    <p>字段匹配</p>
+                    <p className="ya-mt10 ya-mb10 ya-font16">字段匹配</p>
                     {
                         columns.map((item,index)=>{
-                            return <div className="ya-inline-block">
-                                <span className="">{item.title}</span> -- <input onChange={this.colMateChange.bind(this,item.dataIndex)}/>
+                            return <div className="ya-inline-block ya-mr20 ya-mb10">
+                                <span className="batch-creat-member-col ">{item.title}</span> -- <input onChange={this.colMateChange.bind(this,item.dataIndex)}/>
                             </div>
                         })
                     }

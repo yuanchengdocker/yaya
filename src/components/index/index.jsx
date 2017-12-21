@@ -3,6 +3,7 @@ import {Button,notification} from 'antd'
 import MemeberCreater from './member/Creater'
 import EditableTable from '../common/editable/EditableTable'
 import {axiosAjax} from '../../service/getService';
+import SingleAdd from './member/SingleAdd'
 
 class Index extends React.Component{
     constructor(props){
@@ -77,6 +78,11 @@ class Index extends React.Component{
             batchVisibal:flag
         })
     }
+    memberSingleAddVisibal(flag){
+        this.setState({
+            singleVisibal:flag
+        })
+    }
     render(){
         let columns = [{
             title: 'name',
@@ -96,7 +102,8 @@ class Index extends React.Component{
         }];
 
         return <div>
-            <Button className="editable-add-btn" onClick={this.memberSingleAdd.bind(this,true)}>单个新增</Button>
+            <Button className="editable-add-btn" onClick={this.memberSingleAddVisibal.bind(this,true)}>单个新增</Button>
+            <SingleAdd flag={"add"} sucFn={this.getMemberList.bind(this)} visibleFn={this.memberSingleAddVisibal.bind(this)} visible={this.state.singleVisibal}/>
             <Button className="editable-add-btn" onClick={this.memberCreaterVisibal.bind(this,true)}>批量新增</Button>
             {
                 this.state.batchVisibal?
