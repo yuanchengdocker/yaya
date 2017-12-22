@@ -7,7 +7,7 @@ var devConfig = {
     mysqlPort : '3306',
     mysqlName : 'yuan',
     mysqlUser : 'root',
-    mysqlPass : 'root',
+    mysqlPass : '5696289',
     host : 'localhost',
     port : '7070',
     isDev : isDev,
@@ -27,9 +27,11 @@ var devConfig = {
         },
         member:{
             add:bashPath+"/member/add",
+            batchadd:bashPath+"/member/batchadd",
             delete:bashPath+"/member/delete",
             update:bashPath+"/member/update",
-            list:bashPath+"/member/list"
+            list:bashPath+"/member/list",
+            info:bashPath+"/member/info"
         }
     }
 }
@@ -39,7 +41,7 @@ var proConfig = {
     mysqlPort : '3306',
     mysqlName : 'yuan',
     mysqlUser : 'root',
-    mysqlPass : 'root',
+    mysqlPass : '5696289',
     host : 'localhost',
     port : '8089',
     isDev : isDev,
@@ -59,9 +61,11 @@ var proConfig = {
         },
         member:{
             add:bashPath+"/member/add",
+            batchadd:bashPath+"/member/batchadd",
             delete:bashPath+"/member/delete",
             update:bashPath+"/member/update",
-            list:bashPath+"/member/list"
+            list:bashPath+"/member/list",
+            info:bashPath+"/member/info"
         }
     }
 }

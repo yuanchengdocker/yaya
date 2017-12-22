@@ -217,6 +217,17 @@ router.post(urlPath.member.add, function(req, res) {
         }
     })
 })
+router.post(urlPath.member.batchadd, function(req, res) {
+    res.writeHead(200,{'Content-Type':'text/html;charset=utf-8'})
+    var newMember= new dao.member(req.body)
+    var members= req.body.members;
+    newMember.batchAdd(members,function(err,member){
+        errCheck(err,res);
+        if (member) {
+            res.end(JSON.stringify({ code: 1000, data:member }))
+        }
+    })
+})
 router.post(urlPath.member.delete, function(req, res) {
     res.writeHead(200,{'Content-Type':'text/html;charset=utf-8'})
     var newMember= new dao.member(req.body)
@@ -245,6 +256,20 @@ router.post(urlPath.member.update, function(req,res){
         errCheck(err,res);
         res.end(JSON.stringify({ code: 1000, data:result.changedRows&&true }))
     })
+})
+router.post(urlPath.member.info, function(req,res){
+    var newMember = new dao.member(req.body)
+    var valid = req.body.valid;
+    newMember.getMemberbyId(function(err, member) {
+        errCheck(err,res);
+        if (member && member.length > 0) {
+            if(member instanceof Array) member = member[0];
+            var data = {'member':member}
+            res.end(JSON.stringify({ code: 1000, data: data }))
+        }else{
+            res.end(JSON.stringify({ code: 1000 }))
+        }
+    },valid)
 })
 
 

@@ -32,7 +32,23 @@ function Member(member){
 }
 Member.prototype.add = function(callback){
   var sql = 'insert into member(name,phone,sex) values(?,?,?)' ;
-  excuteSql(sql,[this.name,this.sex,this.phone],callback)
+  excuteSql(sql,[this.name,this.phone,this.sex],callback)
+};
+Member.prototype.batchAdd = function(members,callback){
+  var values = "";
+  var arr = [];
+  members&&members.map(function(item,index){
+    if(index === 0){
+      values += "(?,?,?)";
+    }else{
+      values += ",(?,?,?)";
+    }
+    arr.push(item["name"]);
+    arr.push(item["age"]);
+    arr.push(item["phone"]);
+  })
+  var sql = 'insert into member(name,age,phone) values'+values ;
+  excuteSql(sql,arr,callback)
 };
 Member.prototype.delete = function(callback){
   var sql = 'delete from member where id = ?' ;
@@ -41,6 +57,15 @@ Member.prototype.delete = function(callback){
 Member.prototype.getMemberbyUsernameOrPhone = function(value,callback){
     var sql = 'select * from member where name = ? or phone = ?' ;
     excuteSql(sql,[value,value],callback)
+};
+Member.prototype.getMemberbyId = function(callback,valid){
+  var sql = 'select * from member where id = ?' ;
+  var arr = [this.id];
+  if(valid){
+    sql = 'select * from member where '+valid +"= ?" ;
+    arr = (this[valid])
+  }
+  excuteSql(sql,arr,callback)
 };
 Member.prototype.updateMemberById = function(callback){
   var arr = [this.name,this.phone,this.sex];

@@ -15,9 +15,11 @@ export var urlPath = {
     },
     member:{
         add:bashPath+"/member/add",
+        batchadd:bashPath+"/member/batchadd",
         delete:bashPath+"/member/delete",
         update:bashPath+"/member/update",
-        list:bashPath+"/member/list"
+        list:bashPath+"/member/list",
+        info:bashPath+"/member/info"
     }
 }
     

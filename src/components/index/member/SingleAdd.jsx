@@ -60,9 +60,8 @@ class SingleAdd extends React.Component{
     }
     phoneValid = async (rule, value, callback) => {
       let param = {
-        id : this.state.member?this.state.member.id:"",
-        name : value,
-        valid : "name"
+        phone : value,
+        valid : "phone"
       }
       let {data} = await axiosAjax(["member","info"],param,"post")
       if (data&&data.member) {

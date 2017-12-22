@@ -13,22 +13,22 @@ class Creater extends React.Component{
             fileData:[],
             visible:visible,
             columns:[{
-                title: 'name',
+                title: '姓名',
                 dataIndex: 'name',
                 width: '25%',
                 editable:true,
             }, {
-                title: 'age',
+                title: '年龄',
                 dataIndex: 'age',
                 width: '15%',
                 editable:true,
             }, {
-                title: 'address',
-                dataIndex: 'address',
+                title: '电话',
+                dataIndex: 'phone',
                 width: '40%',
                 editable:true,
             }],
-            colMatch:{}
+            colMatch:{name:"姓名",age:"年龄",phone:"电话"}
         }
     }
     componentWillReceiveProps (nextProps) {
@@ -70,6 +70,9 @@ class Creater extends React.Component{
             resultData&&resultData.map((item)=>{
                 for(let param in colMatch){
                     item[param] = item[colMatch[param]]
+                    if(param == "age"){
+                        item[param] = parseInt(item[param])
+                    }
                 }
             })
 
@@ -80,9 +83,16 @@ class Creater extends React.Component{
         };
         reader.readAsBinaryString(file);
     }
-    createrSubmit(){
+    async createrSubmit(){
         console.log(this.state.fileData)
-        this.props.sucFn();
+        let param = {
+            members:this.state.fileData
+        }
+        let {data} = await axiosAjax(["member","batchadd"],param,"post");
+        if(data){
+            this.props.sucFn();
+            this.hiddenModule()
+        }
     }
     hiddenModule(){
         this.setState({
