@@ -2,3 +2,5 @@
 npm install -g supervisor
 
 supervisor app.js
+
+初始化建表，并添加初始化数据，执行initSQL.sql;
