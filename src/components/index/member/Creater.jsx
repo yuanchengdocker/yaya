@@ -130,7 +130,7 @@ class Creater extends React.Component{
                     <p className="ya-mt10 ya-mb10 ya-font16">字段匹配</p>
                     {
                         columns.map((item,index)=>{
-                            return <div className="ya-inline-block ya-mr20 ya-mb10">
+                            return <div key={index} className="ya-inline-block ya-mr20 ya-mb10">
                                 <span className="batch-creat-member-col ">{item.title}</span> -- <input onChange={this.colMateChange.bind(this,item.dataIndex)}/>
                             </div>
                         })
