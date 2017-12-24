@@ -1,13 +1,10 @@
-SET NAMES utf8;
-SET FOREIGN_KEY_CHECKS = 0;
-
 -- ----------------------------
 --  Table structure for `member`
 -- ----------------------------
 DROP TABLE IF EXISTS `member`;
 CREATE TABLE `member` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) CHARACTER SET utf8 NOT NULL,
+  `name` varchar(255) NOT NULL,
   `sex` int(11) DEFAULT NULL,
   `age` int(11) DEFAULT NULL,
   `phone` varchar(20) NOT NULL,
@@ -18,7 +15,7 @@ CREATE TABLE `member` (
   `updater` varchar(255) DEFAULT NULL,
   `deleted` tinyint(1) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=21323258 DEFAULT CHARSET=latin1;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=21323258;
 
 -- ----------------------------
 --  Records of `member`
@@ -29,16 +26,12 @@ COMMIT;
 
 SET FOREIGN_KEY_CHECKS = 1;
 
-
-SET NAMES utf8;
-SET FOREIGN_KEY_CHECKS = 0;
-
 -- ----------------------------
 --  Table structure for `user`
 -- ----------------------------
 DROP TABLE IF EXISTS `user`;
 CREATE TABLE `user` (
-  `id` int(50) NOT NULL,
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `name` varchar(45) DEFAULT NULL,
   `age` varchar(45) DEFAULT NULL,
   `sex` varchar(45) DEFAULT NULL,
@@ -52,7 +45,7 @@ CREATE TABLE `user` (
   `head_img` varchar(200) DEFAULT NULL COMMENT '头像',
   `address` varchar(200) NOT NULL COMMENT '门店地址',
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 AUTO_INCREMENT=21323258;
 
 -- ----------------------------
 --  Records of `user`

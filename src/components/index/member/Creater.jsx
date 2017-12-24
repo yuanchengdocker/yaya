@@ -1,4 +1,5 @@
 import React from 'react'
+import ReactDOM from 'react-dom'
 import {Button,Modal,Icon} from 'antd'
 import XLSX from 'xlsx'
 import style from './Creater.styl'

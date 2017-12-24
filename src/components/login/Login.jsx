@@ -1,4 +1,5 @@
 import React from 'react';
+import ReactDOM from 'react-dom'
 import style from './Login.styl';
 import {axiosAjax} from '../../service/getService';
 import {setCookie,getCookie,delCookie,clearCookie} from '../../utils/optCookie'

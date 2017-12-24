@@ -1,5 +1,7 @@
 import React from 'react'
-import {Button,notification} from 'antd'
+import ReactDOM from 'react-dom'
+import {Button,notification,Input} from 'antd'
+const Search = Input.Search;
 import MemeberCreater from './member/Creater'
 import EditableTable from '../common/editable/EditableTable'
 import {axiosAjax} from '../../service/getService';
@@ -56,11 +58,12 @@ class Index extends React.Component{
     memberBatchAdd(){
 
     }
-    async getMemberList(page){
+    async getMemberList(page,param2){
         let param = {
             currentPage:(page&&page.current)||this.state.pagination.current,
             pageSize:(page&&page.pageSize)||this.state.pagination.pageSize,
-            table:"member"
+            table:"member",
+            param:param2||{}
         }
         let {data,total} = await axiosAjax(["member","list"],param,"post")
         console.log(data)
@@ -83,16 +86,22 @@ class Index extends React.Component{
             singleVisibal:flag
         })
     }
+    memberSearch(value){
+        this.getMemberList(this.state.pagination,{
+            name:value,
+            phone:value
+        })
+    }
     render(){
         let columns = [{
             title: 'name',
             dataIndex: 'name',
-            width: '25%',
+            width: '15%',
             editable:true,
         }, {
             title: 'phone',
             dataIndex: 'phone',
-            width: '15%',
+            width: '25%',
             editable:true,
         }, {
             title: 'address',
@@ -110,6 +119,10 @@ class Index extends React.Component{
                 <MemeberCreater sucFn={this.getMemberList.bind(this)} visibleFn={this.memberCreaterVisibal.bind(this)} visible={this.state.batchVisibal}/>
                 :""
             }
+            <Search
+                placeholder="input search text"
+                onSearch={this.memberSearch.bind(this)}
+                enterButton/>
             <EditableTable activeFn={this.state.activeFn} columns={columns} pagination={this.state.pagination} data={this.state.data}/>
         </div>
     }
