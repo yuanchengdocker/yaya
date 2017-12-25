@@ -31,11 +31,11 @@ Page.prototype.query = function(callback, total) {
             }
         }
     }
-    if (condition) { condition = " where " + condition; }
-    var sqlTotal = 'select count(*) as count from ' + this.table + condition;
+    if(condition){condition = " and "+condition;}
+    var sqlTotal = 'select count(*) as count from ' + this.table + " where deleted != 0 or deleted is null " + condition;
     excuteSql(sqlTotal, [], function(err, res) {
         total = res[0].count;
-        var sql = 'select * from ' + self.table + condition + ' limit ' + (self.currentPage - 1) * self.pageSize + ',' + (self.currentPage) * self.pageSize;
+        var sql = 'select * from ' + self.table + " where deleted != 0 or deleted is null " + condition + ' limit ' + (self.currentPage - 1) * self.pageSize + ',' + (self.currentPage) * self.pageSize;
         excuteSql(sql, [], callback, total)
     })
 }
@@ -48,7 +48,7 @@ function Member(member) {
     this.address = member.address;
 }
 Member.prototype.add = function(callback) {
-    var sql = 'insert into member(name,phone,address) values(?,?,?)';
+    var sql = 'insert into member(name,phone,address,create_time) values(?,?,?,now())';
     excuteSql(sql, [this.name, this.phone, this.address], callback)
 };
 Member.prototype.batchAdd = function(members, callback) {
@@ -56,19 +56,19 @@ Member.prototype.batchAdd = function(members, callback) {
     var arr = [];
     members && members.map(function(item, index) {
         if (index === 0) {
-            values += "(?,?,?)";
+            values += "(?,?,?,now())";
         } else {
-            values += ",(?,?,?)";
+            values += ",(?,?,?,now())";
         }
         arr.push(item["name"]);
         arr.push(item["age"]);
         arr.push(item["phone"]);
     })
-    var sql = 'insert into member(name,age,phone) values' + values;
+    var sql = 'insert into member(name,age,phone,create_time) values' + values;
     excuteSql(sql, arr, callback)
 };
 Member.prototype.delete = function(callback) {
-    var sql = 'delete from member where id = ?';
+    var sql = 'update member set deleted=0 where id = ?';
     excuteSql(sql, [this.id], callback)
 };
 
@@ -76,7 +76,7 @@ Member.prototype.getMemberbyId = function(callback, valid) {
     var sql = 'select * from member where id = ?';
     var arr = [this.id];
     if (valid) {
-        sql = 'select * from member where ' + valid + "= ?";
+        sql = 'select * from member where ' + valid + "= ? and (deleted != 0 or deleted is null )";
         arr = (this[valid])
     }
     excuteSql(sql, arr, callback)
@@ -102,18 +102,18 @@ User.prototype.add = function(callback) {
     excuteSql(sql, [this.name, this.phone, this.address], callback)
 };
 User.prototype.delete = function(callback) {
-    var sql = 'delete from user where id = ?';
+    var sql = 'update user set deleted = 0 where id = ?';
     excuteSql(sql, [this.id], callback)
 };
 User.prototype.getUserbyUsername = function(callback) {
-    var sql = 'select id,name,password,phone,type,address from user where name = ?';
+    var sql = 'select id,name,password,phone,type,address from user where name = ? and (deleted != 0 or deleted is null )';
     excuteSql(sql, [this.name], callback)
 };
 User.prototype.getUserbyId = function(callback, valid) {
     var sql = 'select id,name,password,phone,type,address from user where id = ?';
     var arr = [this.id];
     if (valid) {
-        sql = 'select id,name,password,phone,type,address from user where id != ? and ' + valid + "= ?";
+        sql = 'select id,name,password,phone,type,address from user where id != ? and ' + valid + "= ? and (deleted != 0 or deleted is null )";
         arr.push(this[valid])
     }
     excuteSql(sql, arr, callback)

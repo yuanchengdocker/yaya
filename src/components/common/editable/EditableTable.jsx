@@ -8,14 +8,16 @@ class EditableTable extends React.Component {
     super(props);
     let {hiddenOpt,columns} = this.props;
     let self = this;
+    this.editableCol = {}
     columns&&columns.map((item)=>{
+      this.editableCol[item.dataIndex] = item.editable;
         item.render = (text, record, index) => self.renderColumns(self.state.data, index, item.dataIndex, text)
     })
     this.columns = columns||[];
 
     if(!hiddenOpt){
         this.columns.push({
-          title: 'operation',
+          title: '操作',
           dataIndex: 'operation',
           width: '30%',
           render: (text, record, index) => {
@@ -25,18 +27,18 @@ class EditableTable extends React.Component {
                 {
                   editable ?
                     <span>
-                      <Popconfirm title="Sure to Save?" onConfirm={() => this.editDone(index, 'save')}>
-                        <a>Save</a>
+                      <Popconfirm title="是否确定保存?" onConfirm={() => this.editDone(index, 'save')}>
+                        <a>保存</a>
                       </Popconfirm>
-                      <Popconfirm title="Sure to cancel?" onConfirm={() => this.editDone(index, 'cancel')}>
-                        <a>Cancel</a>
+                      <Popconfirm title="是否确定取消?" onConfirm={() => this.editDone(index, 'cancel')}>
+                        <a>取消</a>
                       </Popconfirm>
                     </span>
                     :
                     <span>
-                      <a onClick={() => this.edit(index)}>Edit</a>
-                      <Popconfirm title="Sure to Delete?" onConfirm={() => this.delete(index)}>
-                        <a>Delete</a>
+                      <a onClick={() => this.edit(index)}>修改</a>
+                      <Popconfirm title="是否确定删除?" onConfirm={() => this.delete(index)}>
+                        <a>删除</a>
                       </Popconfirm>
                     </span>
                 }
@@ -61,8 +63,8 @@ class EditableTable extends React.Component {
 
   renderColumns(data, index, key, text) {
     const value = data[index][key];
-    const editable = data[index].editable;
-    const status = data[index].status;
+    const editable = data[index].editable&&this.editableCol[key];
+    const status = this.editableCol[key]?data[index].status:"";
     
     return (<EditableCell
       editable={editable||false}

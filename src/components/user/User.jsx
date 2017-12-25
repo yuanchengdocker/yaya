@@ -54,7 +54,8 @@ class User extends React.Component{
     async deleteUser(user,callback){
         let {data} = await axiosAjax(["user","delete"],user,"post")
         if(data){
-            callback();
+            this.getUserList();
+            callback&&callback();
             notification['success']({
                 message: '成功',
                 description: "删除成功"
@@ -93,23 +94,23 @@ class User extends React.Component{
     }
     render(){
         let columns = [{
-            title: 'name',
+            title: '姓名',
             dataIndex: 'name',
-            width: '25%',
+            width: '20%',
             editable:true,
         }, {
-            title: 'age',
-            dataIndex: 'age',
-            width: '15%',
+            title: '电话号码',
+            dataIndex: 'phone',
+            width: '30%',
             editable:true,
         }, {
-            title: 'address',
+            title: '店面地址',
             dataIndex: 'address',
-            width: '40%',
+            width: '30%',
             editable:true,
         }];
         return <div>
-            <Button className="editable-add-btn" onClick={this.userProfileSet.bind(this,true)}>Add</Button>
+            <Button className="editable-add-btn ya-mt10 ya-mb10" onClick={this.userProfileSet.bind(this,true)}>添加员工</Button>
             <Profile flag={"add"} sucFn={this.getUserList.bind(this)} visibleFn={this.userProfileSet.bind(this)} visible={this.state.addVisible}/>
             <EditableTable activeFn={this.state.activeFn} columns={columns} pagination={this.state.pagination} data={this.state.data}/>
         </div>

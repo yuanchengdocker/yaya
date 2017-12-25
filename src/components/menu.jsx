@@ -43,10 +43,10 @@ class Menu extends React.Component{
                 </div>
     
                 <ul className="sidebar-menu" data-widget="tree">
-                    <li className="header">MAIN NAVIGATION</li>
+                    <li className="header">主栏目</li>
                     <li className={active=="index"||active==""?"active":""}>
                         <a href="#/index" onClick={this.menuChange.bind(this,"index")}>
-                            <i className="fa fa-dashboard"></i><span>首页</span>
+                            <i className="fa fa-dashboard"></i><span>首页(会员)</span>
                             <span className="pull-right-container">
                             </span>
                         </a>
@@ -54,9 +54,8 @@ class Menu extends React.Component{
 
                     <li className={active=="user"?"active":""}>
                         <a href="#/user" onClick={this.menuChange.bind(this,"user")}>
-                            <i className="fa fa-th"></i> <span>用户管理</span>
+                            <i className="fa fa-th"></i> <span>员工管理</span>
                             <span className="pull-right-container">
-                            {/* <small className="label pull-right bg-green">new</small> */}
                             </span>
                         </a>
                     </li>

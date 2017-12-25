@@ -14,14 +14,7 @@ class Profile extends React.Component{
           visible:visible,
           flag:flag,
           user:user||{},
-          isUpdateSecret:false,
-          addrArr:[{
-            value: '1',
-            label: '1'},
-            {
-              value: '2',
-              label: '2'}
-          ]
+          isUpdateSecret:false
         }
     }
     componentDidMount() {
@@ -37,7 +30,7 @@ class Profile extends React.Component{
     checkPassword = (rule, value, callback) => {
       const form = this.props.form;
       if (value && value !== form.getFieldValue('password')) {
-        callback('Two passwords that you enter is inconsistent!');
+        callback('确认密码与新密码不同');
       } else {
         callback();
       }
@@ -76,7 +69,6 @@ class Profile extends React.Component{
       e.preventDefault();
       this.props.form.validateFieldsAndScroll(async (err, values) => {
         if (!err) {
-          console.log('Received values of form: ', values);
           if(this.state.flag=="update"){
             let isUpdate = false;
             for(let param in values){
@@ -101,6 +93,10 @@ class Profile extends React.Component{
               let {data} = await axiosAjax(["user","info"],{id:values.id},"post")
               setUser(data&&data.user)
               this.hiddenModule()
+              notification['success']({
+                  message: '成功',
+                  description: "修改成功"
+              });
             }else{
               notification['warn']({
                   message: '修改失败',
@@ -113,6 +109,10 @@ class Profile extends React.Component{
             if(data){
               this.props.sucFn();
               this.hiddenModule()
+              notification['success']({
+                  message: '成功',
+                  description: "添加成功"
+              });
             }
           }
 
@@ -138,11 +138,6 @@ class Profile extends React.Component{
       }
     }
     render(){
-      let addrArr = []
-      for (let i = 0; i < this.state.addrArr.length; i++) {
-        let addr = this.state.addrArr[i]
-        addrArr.push(<Select.Option key={i} value={addr.value}>{addr.label}</Select.Option>);
-      }
       const { getFieldDecorator,resetFields } = this.props.form;
       let user = this.state.user||{};
       return (
@@ -160,33 +155,28 @@ class Profile extends React.Component{
                 initialValue:user.name,
                 rules: [{
                   required: true,
-                  message: 'Please input your name',
+                  message: '姓名不能为空',
                 },{
                   validator: this.nameValid,
                 }],
               })(
-                <Input placeholder="Please input your name" />
+                <Input placeholder="请输入您的姓名" />
               )}
             </FormItem>
             <FormItem label="电话号码">
               {getFieldDecorator('phone', {
                 initialValue:user.phone,
-                rules: [{ required: true, message: 'Please input your phone number!' }],
+                rules: [{ required: true, message: '电话号码不能为空' }],
               })(
-                <Input style={{ width: '100%' }} />
+                <Input style={{ width: '100%' }} placeholder="请输入您的电话号码"/>
               )}
             </FormItem>
             <FormItem label="地址">
               {getFieldDecorator('address', {
-                  initialValue: 2,
+                  initialValue: user.address,
                   rules: [{ required: true, message: '请输入你所在店面地址!' }],
                 })(
-                  <Select
-                    style={{ width: '100%' }}
-                    placeholder="请选择地址"
-                  >
-                    {addrArr}
-                  </Select>
+                  <Input style={{ width: '100%' }} placeholder="请输入您所在店面"/>
                 )}
             </FormItem>
             {
@@ -204,29 +194,29 @@ class Profile extends React.Component{
                 <FormItem label="原密码">
                 {getFieldDecorator('oldPass', {
                   rules: [{
-                    required: true, message: 'Please input your password!',
+                    required: true, message: '密码不能为空',
                   },{
                     validator: this.checkOldPassword,
                   }],
                 })(
-                  <Input type="password" />
+                  <Input type="password" placeholder="请输入您的原密码"/>
                 )}
                 </FormItem>
                 <FormItem label="新密码">
                 {getFieldDecorator('password', {
                   rules: [{
-                    required: true, message: 'Please input your password!',
+                    required: true, message: '新密码输入不能为空',
                   }, {
                     validator: this.checkConfirm,
                   }],
                 })(
-                  <Input type="password" />
+                  <Input type="password" placeholder="请输入您的新密码"/>
                 )}
                 </FormItem>
                 <FormItem label="确认新密码">
                     {getFieldDecorator('confirm', {
                     rules: [{
-                      required: true, message: 'Please confirm your password!',
+                      required: true, message: '确认新密码不能为空',
                     }, {
                       validator: this.checkPassword,
                     }],

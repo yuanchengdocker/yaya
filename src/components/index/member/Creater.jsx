@@ -93,6 +93,10 @@ class Creater extends React.Component{
         if(data){
             this.props.sucFn();
             this.hiddenModule()
+            notification['success']({
+                message: '成功',
+                description: "批量添加成功"
+            });
         }
     }
     hiddenModule(){

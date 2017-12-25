@@ -48,6 +48,10 @@ class SingleAdd extends React.Component{
           if(data){
             this.props.sucFn();
             this.hiddenModule()
+            notification['success']({
+                message: '成功',
+                description: "添加成功"
+            });
           }
 
         }
@@ -88,30 +92,30 @@ class SingleAdd extends React.Component{
                 initialValue:member.name,
                 rules: [{
                   required: true,
-                  message: 'Please input your name',
+                  message: '姓名不能为空',
                 }],
               })(
-                <Input placeholder="Please input your name" />
+                <Input placeholder="请输入姓名！" />
               )}
             </FormItem>
             <FormItem label="电话号码">
               {getFieldDecorator('phone', {
                 initialValue:member.phone,
-                rules: [{ required: true, message: 'Please input your phone number!' },{
+                rules: [{ required: true, message: '电话不能为空' },{
                   validator: this.phoneValid,
                 }],
               })(
-                <Input style={{ width: '100%' }} />
+                <Input style={{ width: '100%' }} placeholder="请输入电话号码！"/>
               )}
             </FormItem>
-            <FormItem label="地址">
+            {/* <FormItem label="地址">
               {getFieldDecorator('address', {
                 initialValue:member.phone,
                 rules: [{ required: true, message: '请输入点至 '}],
               })(
                 <Input style={{ width: '100%' }} />
               )}
-            </FormItem>
+            </FormItem> */}
            
           </Form>
         </Modal>

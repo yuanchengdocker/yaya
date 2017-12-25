@@ -5,6 +5,7 @@ const Search = Input.Search;
 import MemeberCreater from './member/Creater'
 import EditableTable from '../common/editable/EditableTable'
 import {axiosAjax} from '../../service/getService';
+import {formatDateTime} from '../../utils/optTime'
 import SingleAdd from './member/SingleAdd'
 
 class Index extends React.Component{
@@ -31,6 +32,10 @@ class Index extends React.Component{
         let {data,messgage} = await axiosAjax(["member","update"],member,"post")
         if(data){
             callback(data)
+            notification['success']({
+                message: '成功',
+                description: "修改成功"
+            });
         }else{
             notification['warn']({
                 message: '修改失败',
@@ -66,7 +71,9 @@ class Index extends React.Component{
             param:param2||{}
         }
         let {data,total} = await axiosAjax(["member","list"],param,"post")
-        console.log(data)
+        data&&data.map((item)=>{
+            item.create_time = formatDateTime(item.create_time)
+        })
         this.setState({
             data:data,
             pagination:{
@@ -94,35 +101,37 @@ class Index extends React.Component{
     }
     render(){
         let columns = [{
-            title: 'name',
+            title: '姓名',
             dataIndex: 'name',
-            width: '15%',
+            width: '20%',
             editable:true,
         }, {
-            title: 'phone',
+            title: '电话',
             dataIndex: 'phone',
-            width: '25%',
+            width: '30%',
             editable:true,
         }, {
-            title: 'address',
-            dataIndex: 'address',
-            width: '40%',
-            editable:true,
+            title: '创建时间',
+            dataIndex: 'create_time',
+            width: '20%',
+            editable:false,
         }];
 
         return <div>
-            <Button className="editable-add-btn" onClick={this.memberSingleAddVisibal.bind(this,true)}>单个新增</Button>
+            <Button type="primary" size="large" className="editable-add-btn ya-mt10 ya-mb10 ya-mr10" onClick={this.memberSingleAddVisibal.bind(this,true)}>单个新增</Button>
             <SingleAdd flag={"add"} sucFn={this.getMemberList.bind(this)} visibleFn={this.memberSingleAddVisibal.bind(this)} visible={this.state.singleVisibal}/>
-            <Button className="editable-add-btn" onClick={this.memberCreaterVisibal.bind(this,true)}>批量新增</Button>
+            <Button type="primary" size="large" className="editable-add-btn ya-mt10 ya-mb10 ya-mr10" onClick={this.memberCreaterVisibal.bind(this,true)}>批量新增</Button>
             {
                 this.state.batchVisibal?
                 <MemeberCreater sucFn={this.getMemberList.bind(this)} visibleFn={this.memberCreaterVisibal.bind(this)} visible={this.state.batchVisibal}/>
                 :""
             }
+            <div className="ya-mb10 ya-inline-block" style={{width:"46%"}}>
             <Search
-                placeholder="input search text"
+                placeholder="您可通过会员 ’姓名’ 或 ‘电话号码’ 进行查找"
                 onSearch={this.memberSearch.bind(this)}
-                enterButton/>
+                style={{height: 32}}
+                enterButton/></div>
             <EditableTable activeFn={this.state.activeFn} columns={columns} pagination={this.state.pagination} data={this.state.data}/>
         </div>
     }

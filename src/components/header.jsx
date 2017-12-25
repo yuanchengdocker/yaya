@@ -37,8 +37,8 @@ class Header extends React.Component{
             <header className="main-header">
                 <Profile flag={"update"} sucFn={this.updateUser.bind(this)} visibleFn={this.userProfileSet.bind(this)} visible={this.state.visible} user={this.state.user}/>
                 <a href="#/index" className="logo">
-                    <span className="logo-mini"><b>A</b>LT</span>
-                    <span className="logo-lg"><b>Admin</b>LTE</span>
+                    <span className="logo-mini"><b>ya</b>ya</span>
+                    <span className="logo-lg"><b>yaya服装</b></span>
                 </a>
                 <nav className="navbar navbar-static-top">
                 <a className="sidebar-toggle" data-toggle="push-menu" role="button">
@@ -56,17 +56,16 @@ class Header extends React.Component{
                             <li className="user-header">
                                 <img src="./img/user2-160x160.jpg" className="img-circle" alt="User Image"/>
                                 <p>
-                                {this.state.user.name}
-                                <small>{this.state.user.phone}</small>
-                                <small>{this.state.user.address}</small>
+                                姓名：{this.state.user.name} 
+                                <small>电话：{this.state.user.phone}  店面：{this.state.user.address}</small>
                                 </p>
                             </li>
                             <li className="user-footer">
                                 <div className="pull-left">
-                                <a  className="btn btn-default btn-flat" onClick={this.userProfileSet.bind(this,true)}>Profile</a>
+                                <a  className="btn btn-default btn-flat" onClick={this.userProfileSet.bind(this,true)}>个人资料</a>
                                 </div>
                                 <div className="pull-right">
-                                <a className="btn btn-default btn-flat" onClick={this.userLogOut.bind(this)}>Sign out</a>
+                                <a className="btn btn-default btn-flat" onClick={this.userLogOut.bind(this)}>退出系统</a>
                                 </div>
                             </li>
                         </ul>
