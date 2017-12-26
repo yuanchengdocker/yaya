@@ -110,7 +110,7 @@ class User extends React.Component{
             editable:true,
         }];
         return <div>
-            <Button className="editable-add-btn ya-mt10 ya-mb10" onClick={this.userProfileSet.bind(this,true)}>添加员工</Button>
+            <Button type="primary" size="large" className="editable-add-btn ya-mt10 ya-mb10" onClick={this.userProfileSet.bind(this,true)}>添加员工</Button>
             <Profile flag={"add"} sucFn={this.getUserList.bind(this)} visibleFn={this.userProfileSet.bind(this)} visible={this.state.addVisible}/>
             <EditableTable activeFn={this.state.activeFn} columns={columns} pagination={this.state.pagination} data={this.state.data}/>
         </div>
