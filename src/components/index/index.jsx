@@ -3,6 +3,7 @@ import ReactDOM from 'react-dom'
 import {Button,notification,Input} from 'antd'
 const Search = Input.Search;
 import MemeberCreater from './member/Creater'
+import {getUser,delUser} from '../userInit'
 import EditableTable from '../common/editable/EditableTable'
 import {axiosAjax} from '../../service/getService';
 import {formatDateTime} from '../../utils/optTime'
@@ -70,7 +71,16 @@ class Index extends React.Component{
             table:"member",
             param:param2||{}
         }
-        let {data,total} = await axiosAjax(["member","list"],param,"post")
+        let {data,total,code,messgage} = await axiosAjax(["member","list"],param,"post")
+        if(code != 1000){
+            notification['error']({
+                message: '失败',
+                description: messgage
+            });
+            if(code == 1009){
+                delUser();
+            }
+        }
         data&&data.map((item)=>{
             item.create_time = formatDateTime(item.create_time)
         })

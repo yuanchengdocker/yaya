@@ -4,8 +4,8 @@ import { message, notification } from 'antd'
 import axios from 'axios';
 import _isEmpty from 'lodash/isEmpty'
 
-axios.defaults.baseURL = 'http://localhost:8888';
 axios.defaults.headers.post['Content-Type'] = 'application/json';
+axios.defaults.withCredentials=true
 
 export function deepClone(initalObj) {
     var obj = {};
@@ -39,7 +39,8 @@ export function axiosAjax(urls, params, method = 'post', config) {
             break;
     }
     config = _isEmpty(config) ? {
-        headers:{"Content-Type":'application/json'}
+        headers:{"Content-Type":'application/json'},
+        withCredentials:true
     } : config;
     if (method.toLowerCase() == "get") {
         if (!_isEmpty(params)) url = url + "?" + objToQuery(params);

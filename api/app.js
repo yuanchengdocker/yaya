@@ -24,7 +24,7 @@ app.use(function(err, req, res, next) {
 })
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }))
-app.use(cookieParser(config.cookieName))
+app.use(cookieParser())
 
 app.all('*',router)
 app.listen(app.get('port'), function() {

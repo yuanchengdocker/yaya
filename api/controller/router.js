@@ -107,7 +107,7 @@ router.post(urlPath.user.login, function(req, res) {
             user = user[0];
             if (user.password == newUser.password) {
                 var token = encrypt(user.id, user.name)
-                tokenMap[user.id] = token;
+                delete user.password;
                 var data = { 'user': user, 'token': token }
                 res.end(JSON.stringify({ code: 1000, messgage: "登录成功", data: data }))
             } else {
@@ -170,31 +170,19 @@ function getOrValidUser(req, res, next) {
 }
 
 function checkLogin(req, res, next) {
-    var token = req.cookies[config.cookieName] && decrypt(req.cookies[config.cookieName])
-    if (token) {
-        auth(token, function(err, user) {
-            if (err) {
-                return res.json({ code: 1009, messgage: err })
-            }
-            if (user) {
-                if (user.name == token.userName) {
-                    console.log(77777)
-                    next()
-                } else {
-                    return res.json({ code: 1009, messgage: "您还未登录,请先登录" })
-                }
-            }
-        })
+    res.writeHead(200, { 'Content-Type': 'text/html;charset=utf-8' })
+    if (!req.cookies.token || !req.cookies.user) {
+        res.end(JSON.stringify({ code: 1009, messgage: "您还未登录,请先登录" }));
+    }
+
+    var user = decrypt(req.cookies.token)
+    var reqUser = JSON.parse(req.cookies.user)
+
+    if (!user || !reqUser || reqUser.id != user.userId || reqUser.name != user.userName) {
+        res.end(JSON.stringify({ code: 1009, messgage: "您还未登录,请先登录" }));
     } else {
         next()
     }
-}
-
-function checkNotLogin(req, res, next) {
-    if (req.session.user) {
-        return res.json({ code: 1000, messgage: "您已登录,不需重新登录" })
-    }
-    next()
 }
 
 function auth(token, callback) {
@@ -242,6 +230,7 @@ router.post(urlPath.member.delete, function(req, res) {
         }
     })
 })
+router.post(urlPath.member.list,checkLogin);
 router.post(urlPath.member.list, function(req, res) {
     res.writeHead(200, { 'Content-Type': 'text/html;charset=utf-8' })
     var newPage = new dao.page(req.body)
