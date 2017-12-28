@@ -31,7 +31,7 @@ Page.prototype.query = function(callback, total) {
             }
         }
     }
-    if(condition){condition = " and ("+condition+")";}
+    if (condition) { condition = " and (" + condition + ")"; }
     var sqlTotal = 'select count(*) as count from ' + this.table + " where deleted != 0 " + condition;
     excuteSql(sqlTotal, [], function(err, res) {
         total = res[0].count;
@@ -57,15 +57,16 @@ Member.prototype.batchAdd = function(members, callback) {
     var arr = [];
     members && members.map(function(item, index) {
         if (index === 0) {
-            values += "(?,?,?,now())";
+            values += "(?,?,?,?,now())";
         } else {
-            values += ",(?,?,?,now())";
+            values += ",(?,?,?,?,now())";
         }
         arr.push(item["name"]);
-        arr.push(item["age"]);
         arr.push(item["phone"]);
+        arr.push(item["integral"]);
+        arr.push(item["birthday"]);
     })
-    var sql = 'insert into member(name,age,phone,create_time) values' + values;
+    var sql = 'insert into member(name,phone,integral,birthday,create_time) values' + values;
     excuteSql(sql, arr, callback)
 };
 Member.prototype.delete = function(callback) {
@@ -83,7 +84,7 @@ Member.prototype.getMemberbyId = function(callback, valid) {
     excuteSql(sql, arr, callback)
 };
 Member.prototype.updateMemberById = function(callback) {
-    var arr = [this.name, this.phone,this.birthday, this.integral];
+    var arr = [this.name, this.phone, this.birthday, this.integral];
 
     var sql = 'update member set name=?,phone=?,birthday=?,integral=? where id =' + this.id;
     excuteSql(sql, arr, callback)

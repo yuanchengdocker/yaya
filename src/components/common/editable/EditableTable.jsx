@@ -66,7 +66,7 @@ class EditableTable extends React.Component {
     const editable = data[index].editable&&this.editableCol[key];
     const status = this.editableCol[key]?data[index].status:"";
     
-    if(typeof value == null || typeof value == "undefined"){
+    if(value == null || typeof value == "undefined"){
         value = "";
     }
     return (<EditableCell

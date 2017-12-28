@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import {Button,Modal,Icon} from 'antd'
+import {Button,Modal,Icon,notification} from 'antd'
 import XLSX from 'xlsx'
 import style from './Creater.styl'
 import EditableTable from '../../common/editable/EditableTable'
@@ -16,20 +16,25 @@ class Creater extends React.Component{
             columns:[{
                 title: '姓名',
                 dataIndex: 'name',
-                width: '25%',
-                editable:true,
-            }, {
-                title: '年龄',
-                dataIndex: 'age',
-                width: '15%',
+                width: '20%',
                 editable:true,
             }, {
                 title: '电话',
                 dataIndex: 'phone',
-                width: '40%',
+                width: '20%',
+                editable:true,
+            }, {
+                title: '积分',
+                dataIndex: 'integral',
+                width: '10%',
+                editable:true,
+            }, {
+                title: '生日',
+                dataIndex: 'birthday',
+                width: '20%',
                 editable:true,
             }],
-            colMatch:{name:"姓名",age:"年龄",phone:"电话"}
+            colMatch:{name:"姓名",phone:"电话",integral:"积分",birthday:"生日"}
         }
     }
     componentWillReceiveProps (nextProps) {
@@ -37,7 +42,7 @@ class Creater extends React.Component{
             visible:nextProps.visible
         })
     }
-    
+
     fileLoadChange(e){
          var files = e.target.files;
         var f = files[0];
