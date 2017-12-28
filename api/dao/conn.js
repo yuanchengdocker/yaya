@@ -31,11 +31,11 @@ Page.prototype.query = function(callback, total) {
             }
         }
     }
-    if(condition){condition = " and "+condition;}
-    var sqlTotal = 'select count(*) as count from ' + this.table + " where deleted != 0 or deleted is null " + condition;
+    if(condition){condition = " and ("+condition+")";}
+    var sqlTotal = 'select count(*) as count from ' + this.table + " where deleted != 0 " + condition;
     excuteSql(sqlTotal, [], function(err, res) {
         total = res[0].count;
-        var sql = 'select * from ' + self.table + " where deleted != 0 or deleted is null " + condition + ' limit ' + (self.currentPage - 1) * self.pageSize + ',' + (self.currentPage) * self.pageSize;
+        var sql = 'select * from ' + self.table + " where deleted != 0 " + condition + ' limit ' + (self.currentPage - 1) * self.pageSize + ',' + (self.currentPage) * self.pageSize;
         excuteSql(sql, [], callback, total)
     })
 }
@@ -43,13 +43,14 @@ Page.prototype.query = function(callback, total) {
 function Member(member) {
     this.id = member.id;
     this.name = member.name;
-    this.sex = member.sex;
+    this.birthday = member.birthday;
     this.phone = member.phone;
     this.address = member.address;
+    this.integral = member.integral;
 }
 Member.prototype.add = function(callback) {
-    var sql = 'insert into member(name,phone,address,create_time) values(?,?,?,now())';
-    excuteSql(sql, [this.name, this.phone, this.address], callback)
+    var sql = 'insert into member(name,phone,birthday,create_time) values(?,?,?,now())';
+    excuteSql(sql, [this.name, this.phone, this.birthday], callback)
 };
 Member.prototype.batchAdd = function(members, callback) {
     var values = "";
@@ -82,9 +83,9 @@ Member.prototype.getMemberbyId = function(callback, valid) {
     excuteSql(sql, arr, callback)
 };
 Member.prototype.updateMemberById = function(callback) {
-    var arr = [this.name, this.phone, this.sex];
+    var arr = [this.name, this.phone,this.birthday, this.integral];
 
-    var sql = 'update member set name=?,phone=?,sex=? where id =' + this.id;
+    var sql = 'update member set name=?,phone=?,birthday=?,integral=? where id =' + this.id;
     excuteSql(sql, arr, callback)
 }
 

@@ -1,9 +1,10 @@
 import React from 'react'
-import { Button, Modal, Form, Input,Select, Radio,notification } from 'antd';
+import { Button, Modal, Form, Input,Select, Radio,notification,DatePicker } from 'antd';
 const FormItem = Form.Item;
 import ReactDOM from 'react-dom'
 import {axiosAjax} from '../../../service/getService'
 import {ep} from '../../../utils/create-events'
+import {formatDateTime} from '../../../utils/optTime'
 
 class SingleAdd extends React.Component{
     constructor(props){
@@ -43,7 +44,8 @@ class SingleAdd extends React.Component{
       this.props.form.validateFieldsAndScroll(async (err, values) => {
         if (!err) {
           console.log('Received values of form: ', values);
-          
+          values.birthday = formatDateTime(values.birthday._d.getTime());
+
           let {data} = await axiosAjax(["member","add"],values,"post")
           if(data){
             this.props.sucFn();
@@ -108,14 +110,14 @@ class SingleAdd extends React.Component{
                 <Input style={{ width: '100%' }} placeholder="请输入电话号码！"/>
               )}
             </FormItem>
-            {/* <FormItem label="地址">
-              {getFieldDecorator('address', {
-                initialValue:member.phone,
-                rules: [{ required: true, message: '请输入点至 '}],
+            <FormItem label="生日">
+              {getFieldDecorator('birthday', {
+                initialValue:"",
+                rules: [{ required: true, message: '请选择生日 '}],
               })(
-                <Input style={{ width: '100%' }} />
+                <DatePicker style={{ width: '100%' }} />
               )}
-            </FormItem> */}
+            </FormItem>
            
           </Form>
         </Modal>

@@ -3,6 +3,7 @@ import { message, notification } from 'antd'
 // import { post } from '../utils/postUrl.js'
 import axios from 'axios';
 import _isEmpty from 'lodash/isEmpty'
+import {delUser} from '../components/userInit'
 
 axios.defaults.headers.post['Content-Type'] = 'application/json';
 axios.defaults.withCredentials=true
@@ -51,7 +52,7 @@ export function axiosAjax(urls, params, method = 'post', config) {
             .catch(function(response) {
                 notification['error']({
                     message: '服务异常',
-                    description: response.statusText,
+                    description: response.response.data.messgage,
                 });
                 return Promise.reject(response)
             })
@@ -64,8 +65,11 @@ export function axiosAjax(urls, params, method = 'post', config) {
             .catch(function(response) {
                 notification['error']({
                     message: '服务异常',
-                    description: response.statusText,
+                    description: response.response.data.messgage,
                 });
+                if(response.response.status == 403){
+                    delUser();
+                }
                 return Promise.reject(response)
             })
     }

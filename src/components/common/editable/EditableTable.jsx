@@ -62,13 +62,16 @@ class EditableTable extends React.Component {
   }
 
   renderColumns(data, index, key, text) {
-    const value = data[index][key];
+    let value = data[index][key];
     const editable = data[index].editable&&this.editableCol[key];
     const status = this.editableCol[key]?data[index].status:"";
     
+    if(typeof value == null || typeof value == "undefined"){
+        value = "";
+    }
     return (<EditableCell
       editable={editable||false}
-      value={value||""}
+      value={value}
       onChange={value => this.handleChange(key, index, value)}
       status={status}
     />);

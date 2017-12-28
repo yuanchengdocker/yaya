@@ -7,11 +7,6 @@ var router = express.Router()
 var jwt = require('jwt-simple')
 var dao = require('../dao/conn.js')
 var urlPath = config.urlPath;
-var tokenMap = {};
-
-function verification(req, res, next) {
-    var token = req.cookies[config.cookieName] || req.body.token
-}
 
 function encrypt(userId, userName) {
     return jwt.encode({
@@ -42,29 +37,8 @@ router.post('*', function(req, res, next) {
     }
 })
 
-router.post('/api/auth', function(req, res) {
-    var token = decrypt(req.body.token)
-    if (token) {
-        auth(token, function(err, user) {
-            if (err) {
-                return res.json({ code: 1009, messgage: err })
-            }
-            if (user) {
-                if (user.name == token.userName) {
-                    var token1 = encrypt(user._id, user.name)
-                    var data = { 'userName': user.name, 'token': token1 }
-                    res.json({ code: 1000, messgage: "认证成功，token合法", data: data })
-                } else {
-                    res.json({ code: 1001, messgage: "认证失败，非法的token", data: '' })
-                }
-            }
-        })
-    } else {
-        return false
-    }
-})
+router.post(urlPath.user.add,checkLogin);
 router.post(urlPath.user.add, function(req, res) {
-    res.writeHead(200, { 'Content-Type': 'text/html;charset=utf-8' })
     var newUser = new dao.user(req.body)
     newUser.add(function(err, user) {
         errCheck(err, res);
@@ -73,8 +47,8 @@ router.post(urlPath.user.add, function(req, res) {
         }
     })
 })
+router.post(urlPath.user.delete,checkLogin);
 router.post(urlPath.user.delete, function(req, res) {
-    res.writeHead(200, { 'Content-Type': 'text/html;charset=utf-8' })
     var newUser = new dao.user(req.body)
     newUser.delete(function(err, user) {
         errCheck(err, res);
@@ -83,10 +57,9 @@ router.post(urlPath.user.delete, function(req, res) {
         }
     })
 })
+router.post(urlPath.user.list,checkLogin);
 router.post(urlPath.user.list, function(req, res) {
-    res.writeHead(200, { 'Content-Type': 'text/html;charset=utf-8' })
     var newPage = new dao.page(req.body)
-    console.log(tokenMap)
     var total = 0;
     newPage.query(function(err, page, param) {
         errCheck(err, res);
@@ -96,6 +69,7 @@ router.post(urlPath.user.list, function(req, res) {
     }, total)
 })
 
+router.post(urlPath.user.info,checkLogin);
 router.post(urlPath.user.info, getOrValidUser)
 
 router.post(urlPath.user.login, function(req, res) {
@@ -119,6 +93,7 @@ router.post(urlPath.user.login, function(req, res) {
     })
 })
 
+router.post(urlPath.user.update,checkLogin);
 router.post(urlPath.user.update, getOrValidUser);
 router.post(urlPath.user.update, function(req, res) {
     var newUser = new dao.user(req.body)
@@ -150,7 +125,6 @@ router.post(urlPath.user.update, function(req, res) {
 })
 
 function getOrValidUser(req, res, next) {
-    res.writeHead(200, { 'Content-Type': 'text/html;charset=utf-8' })
     var newUser = new dao.user(req.body)
     var valid = req.body.valid;
     var isUpdate = req.body.isUpdate;
@@ -170,23 +144,21 @@ function getOrValidUser(req, res, next) {
 }
 
 function checkLogin(req, res, next) {
-    res.writeHead(200, { 'Content-Type': 'text/html;charset=utf-8' })
     if (!req.cookies.token || !req.cookies.user) {
+        res.writeHead(403, { 'Content-Type': 'text/html;charset=utf-8'})
         res.end(JSON.stringify({ code: 1009, messgage: "您还未登录,请先登录" }));
     }
-
+    
     var user = decrypt(req.cookies.token)
     var reqUser = JSON.parse(req.cookies.user)
-
+    
     if (!user || !reqUser || reqUser.id != user.userId || reqUser.name != user.userName) {
+        res.writeHead(403, { 'Content-Type': 'text/html;charset=utf-8' })
         res.end(JSON.stringify({ code: 1009, messgage: "您还未登录,请先登录" }));
     } else {
+        res.writeHead(200, { 'Content-Type': 'text/html;charset=utf-8' })
         next()
     }
-}
-
-function auth(token, callback) {
-    dao.user.getUserbyUsername()
 }
 
 function errCheck(err, res) {
@@ -199,8 +171,8 @@ function paramsErr() {
     res.end(JSON.stringify({ code: 2009, messgage: "参数异常" }))
 }
 
+router.post(urlPath.member.add,checkLogin);
 router.post(urlPath.member.add, function(req, res) {
-    res.writeHead(200, { 'Content-Type': 'text/html;charset=utf-8' })
     var newMember = new dao.member(req.body)
     newMember.add(function(err, member) {
         errCheck(err, res);
@@ -209,8 +181,8 @@ router.post(urlPath.member.add, function(req, res) {
         }
     })
 })
+router.post(urlPath.member.batchadd,checkLogin);
 router.post(urlPath.member.batchadd, function(req, res) {
-    res.writeHead(200, { 'Content-Type': 'text/html;charset=utf-8' })
     var newMember = new dao.member(req.body)
     var members = req.body.members;
     newMember.batchAdd(members, function(err, member) {
@@ -220,8 +192,8 @@ router.post(urlPath.member.batchadd, function(req, res) {
         }
     })
 })
+router.post(urlPath.member.delete,checkLogin);
 router.post(urlPath.member.delete, function(req, res) {
-    res.writeHead(200, { 'Content-Type': 'text/html;charset=utf-8' })
     var newMember = new dao.member(req.body)
     newMember.delete(function(err, member) {
         errCheck(err, res);
@@ -232,7 +204,6 @@ router.post(urlPath.member.delete, function(req, res) {
 })
 router.post(urlPath.member.list,checkLogin);
 router.post(urlPath.member.list, function(req, res) {
-    res.writeHead(200, { 'Content-Type': 'text/html;charset=utf-8' })
     var newPage = new dao.page(req.body)
     var total = 0;
     newPage.query(function(err, page, param) {
@@ -242,6 +213,7 @@ router.post(urlPath.member.list, function(req, res) {
         }
     }, total)
 })
+router.post(urlPath.member.update,checkLogin);
 router.post(urlPath.member.update, function(req, res) {
     var newMember = new dao.member(req.body)
 
@@ -250,6 +222,7 @@ router.post(urlPath.member.update, function(req, res) {
         res.end(JSON.stringify({ code: 1000, data: result.changedRows && true }))
     })
 })
+router.post(urlPath.member.info,checkLogin);
 router.post(urlPath.member.info, function(req, res) {
     var newMember = new dao.member(req.body)
     var valid = req.body.valid;

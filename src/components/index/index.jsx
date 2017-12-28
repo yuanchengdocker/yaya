@@ -8,6 +8,7 @@ import EditableTable from '../common/editable/EditableTable'
 import {axiosAjax} from '../../service/getService';
 import {formatDateTime} from '../../utils/optTime'
 import SingleAdd from './member/SingleAdd'
+import {ep} from '../../utils/create-events'
 
 class Index extends React.Component{
     constructor(props){
@@ -27,6 +28,7 @@ class Index extends React.Component{
                 page:this.getMemberList.bind(this)
             }
         }
+        
     }
     async updateMember(member,index,callback){
         
@@ -56,7 +58,16 @@ class Index extends React.Component{
         }
     }
     componentDidMount(){
-        this.getMemberList();
+        let self = this;
+        ep.on("is_login_flag",function(user){
+			if(user){
+                self.getMemberList();
+            }
+		});
+        let user = getUser();
+        if(user){
+            self.getMemberList();
+        }
     }
     memberSingleAdd(){
 
@@ -118,13 +129,18 @@ class Index extends React.Component{
         }, {
             title: '电话',
             dataIndex: 'phone',
-            width: '30%',
+            width: '20%',
             editable:true,
         }, {
-            title: '创建时间',
-            dataIndex: 'create_time',
+            title: '积分',
+            dataIndex: 'integral',
+            width: '10%',
+            editable:true,
+        }, {
+            title: '生日',
+            dataIndex: 'birthday',
             width: '20%',
-            editable:false,
+            editable:true,
         }];
 
         return <div>

@@ -10,6 +10,8 @@ CREATE TABLE `member` (
   `age` int(11) DEFAULT NULL,
   `phone` varchar(20) NOT NULL,
   `address` varchar(255) DEFAULT NULL,
+  `birthday` varchar(255) DEFAULT NULL,
+  `integral` int(10) DEFAULT '0',
   `create_time` datetime DEFAULT NULL,
   `update_time` datetime DEFAULT NULL,
   `create_user` varchar(45) DEFAULT NULL,
