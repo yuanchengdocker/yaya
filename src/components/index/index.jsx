@@ -62,12 +62,15 @@ class Index extends React.Component{
         }
     }
     componentWillUpdate () {
-        getUserFlag();
+        let userFlag = getUserFlag();
+        this.state.isRoot = (userFlag=="root")
     }
     componentDidMount(){
         let self = this;
         ep.on("is_login_flag",function(user){
 			if(user){
+                let userFlag = getUserFlag();
+                self.state.isRoot = (userFlag=="root")
                 self.getMemberList();
             }
 		});
@@ -222,7 +225,7 @@ class Index extends React.Component{
         }];
         
         return <div>
-            <a href="" download="这里是下载的文件名.xlsx" id="hf"></a>
+            <a href="" download="会员全部信息.xlsx" id="hf"></a>
             <Button type="primary" size="large" className="editable-add-btn ya-mt10 ya-mb10 ya-mr10" onClick={this.memberSingleAddVisibal.bind(this,true)}>单个新增</Button>
             <SingleAdd flag={"add"} sucFn={this.getMemberList.bind(this)} visibleFn={this.memberSingleAddVisibal.bind(this)} visible={this.state.singleVisibal}/>
             <Button type="primary" size="large" className="editable-add-btn ya-mt10 ya-mb10 ya-mr10" onClick={this.memberCreaterVisibal.bind(this,true)}>批量新增</Button>

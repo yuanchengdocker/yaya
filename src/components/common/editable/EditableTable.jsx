@@ -33,8 +33,7 @@ class EditableTable extends React.Component {
                       <Popconfirm title="是否确定取消?" onConfirm={() => this.editDone(index, 'cancel')}>
                         <a>取消</a>
                       </Popconfirm>
-                    </span>
-                    :
+                    </span>:
                     <span>
                       <a onClick={() => this.edit(index)}>修改</a>
                       {
@@ -59,6 +58,50 @@ class EditableTable extends React.Component {
   }
 
   componentWillReceiveProps(nextProps) {
+    let {hiddenOpt,columns,isCanDel} = nextProps;
+    let self = this;
+    this.editableCol = {}
+    columns&&columns.map((item)=>{
+      this.editableCol[item.dataIndex] = item.editable;
+        item.render = (text, record, index) => self.renderColumns(self.state.data, index, item.dataIndex, text)
+    })
+    this.columns = columns||[];
+
+    if(!hiddenOpt){
+        this.columns.push({
+          title: '操作',
+          dataIndex: 'operation',
+          width: '20%',
+          render: (text, record, index) => {
+            const editable = this.state.data[index].editable;
+            return (
+              <div className="editable-row-operations">
+                {
+                  editable ?
+                    <span>
+                      <Popconfirm title="是否确定保存?" onConfirm={() => this.editDone(index, 'save')}>
+                        <a>保存</a>
+                      </Popconfirm>
+                      <Popconfirm title="是否确定取消?" onConfirm={() => this.editDone(index, 'cancel')}>
+                        <a>取消</a>
+                      </Popconfirm>
+                    </span>:
+                    <span>
+                      <a onClick={() => this.edit(index)}>修改</a>
+                      {
+                        isCanDel?
+                        <Popconfirm title="是否确定删除?" onConfirm={() => this.delete(index)}>
+                          <a>删除</a>
+                        </Popconfirm>
+                        :""
+                      }
+                    </span>
+                }
+              </div>
+            );
+          },
+        })
+    }
     this.setState({
       pagination:nextProps.pagination||{},
       data:nextProps.data||[]
@@ -113,7 +156,7 @@ class EditableTable extends React.Component {
   }
   
   showTabelsChange(page){
-    this.state.activeFn.page(page);
+    (this.state.activeFn&&this.state.activeFn.page)&&this.state.activeFn.page(page);
   }
   render() {
     const { data,pagination } = this.state;

@@ -20,7 +20,8 @@ class Menu extends React.Component{
         }
     }
     componentWillUpdate () {
-        getUserFlag();
+        let userFlag = getUserFlag();
+        this.state.isRoot = (userFlag=="root")
     }
     
     updateUser(user){

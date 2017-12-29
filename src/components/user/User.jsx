@@ -9,6 +9,7 @@ import Profile from '../profile/Profile'
 class User extends React.Component{
     constructor(props){
         super(props)
+        getUserFlag();
         this.state = {
             data:[],
             pagination:{

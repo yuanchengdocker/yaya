@@ -18,7 +18,7 @@ import pages from './params/pageParams'
 import Header from './components/Header'
 import Menu from './components/menu'
 import Login from './components/login/Login'
-import {getUser} from './components/userInit'
+import {getUser,getUserFlag} from './components/userInit'
 import {ep} from './utils/create-events'
 
 class main extends React.Component{
@@ -26,6 +26,7 @@ class main extends React.Component{
 		super(props)
 		let self = this;
 		ep.on("is_login_flag",function(user){
+			getUserFlag()
 			self.setLoginPage(user)
 		});
 		var user = getUser();

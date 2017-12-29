@@ -38,7 +38,7 @@ Page.prototype.query = function(callback, total,id) {
     var sqlTotal = 'select count(*) as count from ' + this.table + " where deleted != 0 " + condition;
     excuteSql(sqlTotal, [], function(err, res) {
         total = res[0].count;
-        var sql = 'select * from ' + self.table + " where deleted != 0 " + condition + ' limit ' + (self.currentPage - 1) * self.pageSize + ',' + (self.currentPage) * self.pageSize;
+        var sql = 'select * from ' + self.table + " where deleted != 0 " + condition + ' ORDER BY id desc limit ' + (self.currentPage - 1) * self.pageSize + ',' + self.pageSize;
         excuteSql(sql, [], callback, total)
     })
 }
