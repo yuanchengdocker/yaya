@@ -1,6 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import {Button,notification} from 'antd'
+import {getUser,delUser,getUserFlag} from '../userInit'
 import EditableTable from '../common/editable/EditableTable'
 import {axiosAjax,deepClone} from '../../service/getService';
 import Profile from '../profile/Profile'
@@ -62,7 +63,9 @@ class User extends React.Component{
             });
         }
     }
-
+    componentWillUpdate () {
+        getUserFlag();
+    }
     componentDidMount() {
         this.getUserList();
     }
@@ -112,7 +115,7 @@ class User extends React.Component{
         return <div>
             <Button type="primary" size="large" className="editable-add-btn ya-mt10 ya-mb10" onClick={this.userProfileSet.bind(this,true)}>添加员工</Button>
             <Profile flag={"add"} sucFn={this.getUserList.bind(this)} visibleFn={this.userProfileSet.bind(this)} visible={this.state.addVisible}/>
-            <EditableTable activeFn={this.state.activeFn} columns={columns} pagination={this.state.pagination} data={this.state.data}/>
+            <EditableTable isCanDel={true} activeFn={this.state.activeFn} columns={columns} pagination={this.state.pagination} data={this.state.data}/>
         </div>
     }
 }

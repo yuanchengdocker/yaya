@@ -1,11 +1,12 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import {getUser,delUser} from './userInit'
+import {getUser,delUser,getUserFlag} from './userInit'
 import {ep} from '../utils/create-events'
 
 class Menu extends React.Component{
     constructor(props){
         super(props)
+        let userFlag = getUserFlag();
         let user = getUser();
         let self = this;
         ep.on("update-user-flag",function(user){
@@ -14,9 +15,14 @@ class Menu extends React.Component{
         let active = location.hash.substr(2,location.hash.indexOf("?")-2);
         this.state = {
             active:active,
-            user:user||{}
+            user:user||{},
+            isRoot:userFlag=="root"
         }
     }
+    componentWillUpdate () {
+        getUserFlag();
+    }
+    
     updateUser(user){
         this.setState({
             user:user
@@ -51,14 +57,16 @@ class Menu extends React.Component{
                             </span>
                         </a>
                     </li>        
-
-                    <li className={active=="user"?"active":""}>
-                        <a href="#/user" onClick={this.menuChange.bind(this,"user")}>
-                            <i className="fa fa-th"></i> <span>员工管理</span>
-                            <span className="pull-right-container">
-                            </span>
-                        </a>
-                    </li>
+                    {
+                        this.state.isRoot?<li className={active=="user"?"active":""}>
+                            <a href="#/user" onClick={this.menuChange.bind(this,"user")}>
+                                <i className="fa fa-th"></i> <span>员工管理</span>
+                                <span className="pull-right-container">
+                                </span>
+                            </a>
+                        </li>:""
+                    }
+                    
                 </ul>
             </section>
         )

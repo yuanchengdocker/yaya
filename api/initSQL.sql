@@ -48,7 +48,7 @@ CREATE TABLE `user` (
 --  Records of `user`
 -- ----------------------------
 BEGIN;
-INSERT INTO `user` VALUES ('10000', 'yuan', '25', '1', null, null, null, null, 'cheng', '1', '13530096049', null, '2',1);
+INSERT INTO `user` VALUES ('10000', 'yuan', '25', '1', null, null, null, null, 'cheng', '0', '13530096049', null, '2',1);
 COMMIT;
 
 SET FOREIGN_KEY_CHECKS = 1;

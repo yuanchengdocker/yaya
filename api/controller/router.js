@@ -60,13 +60,14 @@ router.post(urlPath.user.delete, function(req, res) {
 router.post(urlPath.user.list,checkLogin);
 router.post(urlPath.user.list, function(req, res) {
     var newPage = new dao.page(req.body)
+    var reqUser = JSON.parse(req.cookies.user)
     var total = 0;
     newPage.query(function(err, page, param) {
         errCheck(err, res);
         if (page) {
             res.end(JSON.stringify({ code: 1000, data: page, total: param }))
         }
-    }, total)
+    }, total,reqUser.id)
 })
 
 router.post(urlPath.user.info,checkLogin);

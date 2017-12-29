@@ -18,3 +18,18 @@ export function setUser(user){
 export function setToken(token){
     setCookie("token",token,"d30");
 }
+
+export function getUserFlag(){
+    var rootPage = ["user"];
+    var user = getCookie("user");
+    user = JSON.parse(user)
+    var page = location.hash.substr(2,location.hash.indexOf("?")-2)
+    if(user != null&&typeof user != "undefined"&&user.type == 0){
+        return "root"
+    }else{
+        if(rootPage.indexOf(page) > -1){
+            location.href = location.origin;
+        }
+        return "common"
+    }
+}

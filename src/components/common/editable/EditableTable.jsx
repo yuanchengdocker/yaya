@@ -6,7 +6,7 @@ import EditableCell from './EditableCell'
 class EditableTable extends React.Component {
   constructor(props) {
     super(props);
-    let {hiddenOpt,columns} = this.props;
+    let {hiddenOpt,columns,isCanDel} = this.props;
     let self = this;
     this.editableCol = {}
     columns&&columns.map((item)=>{
@@ -19,7 +19,7 @@ class EditableTable extends React.Component {
         this.columns.push({
           title: '操作',
           dataIndex: 'operation',
-          width: '30%',
+          width: '20%',
           render: (text, record, index) => {
             const editable = this.state.data[index].editable;
             return (
@@ -37,9 +37,13 @@ class EditableTable extends React.Component {
                     :
                     <span>
                       <a onClick={() => this.edit(index)}>修改</a>
-                      <Popconfirm title="是否确定删除?" onConfirm={() => this.delete(index)}>
-                        <a>删除</a>
-                      </Popconfirm>
+                      {
+                        isCanDel?
+                        <Popconfirm title="是否确定删除?" onConfirm={() => this.delete(index)}>
+                          <a>删除</a>
+                        </Popconfirm>
+                        :""
+                      }
                     </span>
                 }
               </div>

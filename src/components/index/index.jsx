@@ -4,7 +4,7 @@ import {Button,notification,Input} from 'antd'
 const Search = Input.Search;
 import XLSX from 'xlsx'
 import MemeberCreater from './member/Creater'
-import {getUser,delUser} from '../userInit'
+import {getUser,delUser,getUserFlag} from '../userInit'
 import EditableTable from '../common/editable/EditableTable'
 import {axiosAjax} from '../../service/getService';
 import {formatDateTime} from '../../utils/optTime'
@@ -14,6 +14,7 @@ import {ep} from '../../utils/create-events'
 class Index extends React.Component{
     constructor(props){
         super(props)
+        let userFlag = getUserFlag();
         this.state={
             data:[],
             singleVisibal:false,
@@ -28,7 +29,8 @@ class Index extends React.Component{
                 delete:this.deleteMember.bind(this),
                 page:this.getMemberList.bind(this)
             },
-            colMatch:{name:"姓名",phone:"电话",integral:"积分",birthday:"生日"}
+            colMatch:{name:"姓名",phone:"电话",integral:"积分",birthday:"生日"},
+            isRoot:userFlag=="root"
         }
         
     }
@@ -58,6 +60,9 @@ class Index extends React.Component{
                 description: "删除成功"
             });
         }
+    }
+    componentWillUpdate () {
+        getUserFlag();
     }
     componentDidMount(){
         let self = this;
@@ -221,7 +226,11 @@ class Index extends React.Component{
             <Button type="primary" size="large" className="editable-add-btn ya-mt10 ya-mb10 ya-mr10" onClick={this.memberSingleAddVisibal.bind(this,true)}>单个新增</Button>
             <SingleAdd flag={"add"} sucFn={this.getMemberList.bind(this)} visibleFn={this.memberSingleAddVisibal.bind(this)} visible={this.state.singleVisibal}/>
             <Button type="primary" size="large" className="editable-add-btn ya-mt10 ya-mb10 ya-mr10" onClick={this.memberCreaterVisibal.bind(this,true)}>批量新增</Button>
-            <Button type="primary" size="large" className="editable-add-btn ya-mt10 ya-mb10 ya-mr10" onClick={this.exportMembers.bind(this)}>批量导出</Button>
+            {
+                this.state.isRoot?
+                <Button type="primary" size="large" className="editable-add-btn ya-mt10 ya-mb10 ya-mr10" onClick={this.exportMembers.bind(this)}>批量导出</Button>
+                :""
+            }
             <div className="ya-mb10 ya-inline-block" style={{width:"46%"}}>
             <Search
                 placeholder="您可通过会员 ’姓名’ 或 ‘电话号码’ 进行查找"
@@ -233,7 +242,7 @@ class Index extends React.Component{
                 <MemeberCreater sucFn={this.getMemberList.bind(this)} visibleFn={this.memberCreaterVisibal.bind(this)} visible={this.state.batchVisibal}/>
                 :""
             } 
-            <EditableTable activeFn={this.state.activeFn} columns={columns} pagination={this.state.pagination} data={this.state.data}/>
+            <EditableTable isCanDel={this.state.isRoot} activeFn={this.state.activeFn} columns={columns} pagination={this.state.pagination} data={this.state.data}/>
         </div>
     }
 }

@@ -15,7 +15,7 @@ function Page(page) {
     this.table = page.table;
     this.param = page.param;
 }
-Page.prototype.query = function(callback, total) {
+Page.prototype.query = function(callback, total,id) {
     var self = this;
     var condition = "";
     if (this.param && typeof this.param == "object") {
@@ -32,6 +32,9 @@ Page.prototype.query = function(callback, total) {
         }
     }
     if (condition) { condition = " and (" + condition + ")"; }
+    if(this.table == 'user' && id){
+        condition = " and id != " + id;
+    }
     var sqlTotal = 'select count(*) as count from ' + this.table + " where deleted != 0 " + condition;
     excuteSql(sqlTotal, [], function(err, res) {
         total = res[0].count;
