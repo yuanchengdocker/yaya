@@ -86,7 +86,7 @@ class Login extends React.Component{
                     <h4>登录</h4>
                     <form>
                         <div className="m-input-row">
-                            <label>邮箱/手机：</label>
+                            <label>用户名：</label>
                             <div className="m-input">
                                 <input value={this.state.username} type="text" name="" onChange={this.nameChange.bind(this)}/>
                             </div>
@@ -96,10 +96,6 @@ class Login extends React.Component{
                             <div className="m-input">
                                 <input value={this.state.password} type="password" name="" onChange={this.passChange.bind(this)}/>
                             </div>
-                        </div>
-                        <div className="m-input-row autoLogon">
-                            <input type="checkbox" name="" id="mycheck" /> <label><a href="#/forgotPassword">忘记密码</a></label>
-                            <div className="clearfix"></div>
                         </div>
                     </form>
                     <div className="clearfix"></div>

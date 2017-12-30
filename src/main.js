@@ -54,7 +54,7 @@ class main extends React.Component{
 		let isUser = this.state.isUser
         return (
             <div className="wrapper">
-				<div className={isUser?"hidden-login main-login":"main-login"}>
+				<div className={isUser?"hidden-login main-login":"main-login"} style={{backgroundImage:'url('+require('./img/login-bg.jpg')+')'}}>
 					{
 						isUser?"":<Login/>
 					}

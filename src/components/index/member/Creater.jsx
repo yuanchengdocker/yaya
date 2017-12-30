@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import {Button,Modal,Icon,notification} from 'antd'
-import XLSX from 'xlsx'
+import {readFile} from '../../../utils/fileInportExport'
 import style from './Creater.styl'
 import EditableTable from '../../common/editable/EditableTable'
 import {axiosAjax} from '../../../service/getService';
@@ -34,7 +34,15 @@ class Creater extends React.Component{
                 width: '20%',
                 editable:true,
             }],
-            colMatch:{name:"姓名",phone:"电话",integral:"积分",birthday:"生日"}
+            colMatch:{name:"姓名",phone:"电话",integral:"积分",birthday:"生日"},
+            activeFn:{
+                page:this.pageChange.bind(this)
+            },
+            pagination:{
+                current:1,
+                pageSize:10,
+                total:0
+            }
         }
     }
     componentWillReceiveProps (nextProps) {
@@ -44,51 +52,12 @@ class Creater extends React.Component{
     }
 
     fileLoadChange(e){
-         var files = e.target.files;
+        var files = e.target.files;
         var f = files[0];
         if(!f) return;
-        this.readFile(f);
+        readFile(f,this);
     }
-     readFile(file) {
-        let self = this;
-        var resultData = [];
-        var name = file.name;
-        var reader = new FileReader();
-        reader.onload = function (e) {
-            var data = e.target.result;
-            var wb = XLSX.read(data, { type: "binary" });
-            if(wb&&wb.Sheets){
-                for(let sheet in wb.Sheets){
-                    var sheetData = XLSX.utils.sheet_to_json(wb.Sheets[sheet]);
-                    console.log(sheetData)
-                    if(sheetData&&sheetData.length>0){
-                        resultData = resultData.concat(sheetData)
-                    }
-                }
-            }
-            
-            let colMatch = self.state.colMatch
-            for(let param in colMatch){
-                if(colMatch[param] == "" || typeof(colMatch[param]) == "undefined")
-                    delete colMatch[param]
-            }
-
-            resultData&&resultData.map((item)=>{
-                for(let param in colMatch){
-                    item[param] = item[colMatch[param]]
-                    if(param == "age"){
-                        item[param] = parseInt(item[param])
-                    }
-                }
-            })
-
-            self.setState({
-                fileData:resultData
-            })
-
-        };
-        reader.readAsBinaryString(file);
-    }
+     
     async createrSubmit(){
         console.log(this.state.fileData)
         let param = {
@@ -121,7 +90,19 @@ class Creater extends React.Component{
              file.value = "";
         }
     }
+    pageChange(page){
+        this.setState({
+            pagination:{
+                current:page.current,
+                pageSize:page.pageSize,
+                total:this.state.fileData.length
+            }
+        })
+    }
     render(){
+        let {pagination,fileData} = this.state;
+        let {current,pageSize} = pagination;
+        let pageData = fileData.slice((current-1)*pageSize,current*pageSize)
         let columns = this.state.columns;
         return <div>
             <Modal
@@ -146,7 +127,7 @@ class Creater extends React.Component{
                         })
                     }
                 </div>
-                <EditableTable data={this.state.fileData} columns={columns} hiddenOpt={true}/>
+                <EditableTable activeFn={this.state.activeFn} pagination={this.state.pagination} data={pageData} columns={columns} hiddenOpt={true}/>
 
             </Modal>
         </div>
