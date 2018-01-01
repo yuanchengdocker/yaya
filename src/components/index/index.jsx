@@ -19,6 +19,7 @@ class Index extends React.Component{
             data:[],
             singleVisibal:false,
             batchVisibal:false,
+            searchValue:"",
             pagination:{
                 current:1,
                 pageSize:10,
@@ -29,7 +30,7 @@ class Index extends React.Component{
                 delete:this.deleteMember.bind(this),
                 page:this.getMemberList.bind(this)
             },
-            colMatch:{name:"姓名",phone:"电话",integral:"积分",birthday:"生日"},
+            colMatch:{name:"姓名",phone:"电话",integral:"积分",birthday:"生日",remark:"备注"},
             isRoot:userFlag=="root"
         }
         
@@ -90,13 +91,19 @@ class Index extends React.Component{
         data&&data.map((item)=>{
             let eitem = {};
             for(let key in this.state.colMatch){
-                eitem[this.state.colMatch[key]] = item[key]
+                eitem[this.state.colMatch[key]] = item[key]||""
             }
             downdata.push(eitem)
         })
         downloadExl(downdata)
     }
     async getMemberList(page,param2){
+        if(this.state.searchValue){
+            param2={
+                name:this.state.searchValue,
+                phone:this.state.searchValue
+            };
+        }
         let param = {
             currentPage:(page&&page.current)||this.state.pagination.current,
             pageSize:(page&&page.pageSize)||this.state.pagination.pageSize,
@@ -136,6 +143,9 @@ class Index extends React.Component{
         })
     }
     memberSearch(value){
+        this.state.searchValue=value;
+        this.state.pagination.current=1;
+        this.state.pagination.pageSize=10;
         this.getMemberList(this.state.pagination,{
             name:value,
             phone:value
@@ -145,12 +155,12 @@ class Index extends React.Component{
         let columns = [{
             title: '姓名',
             dataIndex: 'name',
-            width: '12%',
+            width: '10%',
             editable:true,
         }, {
             title: '电话',
             dataIndex: 'phone',
-            width: '20%',
+            width: '15%',
             editable:true,
         }, {
             title: '积分',
@@ -160,6 +170,11 @@ class Index extends React.Component{
         }, {
             title: '生日',
             dataIndex: 'birthday',
+            width: '19%',
+            editable:true,
+        },{
+            title: '备注',
+            dataIndex: 'remark',
             width: '19%',
             editable:true,
         },{

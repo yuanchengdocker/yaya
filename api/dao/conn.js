@@ -60,16 +60,17 @@ Member.prototype.batchAdd = function(members, callback) {
     var arr = [];
     members && members.map(function(item, index) {
         if (index === 0) {
-            values += "(?,?,?,?,now())";
+            values += "(?,?,?,?,?,now())";
         } else {
-            values += ",(?,?,?,?,now())";
+            values += ",(?,?,?,?,?,now())";
         }
         arr.push(item["name"]);
         arr.push(item["phone"]);
         arr.push(item["integral"]);
         arr.push(item["birthday"]);
+        arr.push(item["remark"]);
     })
-    var sql = 'insert into member(name,phone,integral,birthday,create_time) values' + values;
+    var sql = 'insert into member(name,phone,integral,birthday,remark,create_time) values' + values;
     excuteSql(sql, arr, callback)
 };
 Member.prototype.delete = function(callback) {
@@ -135,6 +136,7 @@ User.prototype.updateUserById = function(isPass, callback) {
 }
 
 function excuteSql(sql, arr, callback, param) {
+    
     connection.query(sql, arr, function(err, res) {
         if (err) {
             console.log('excuteSql err:' + err);

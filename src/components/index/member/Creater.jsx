@@ -33,8 +33,13 @@ class Creater extends React.Component{
                 dataIndex: 'birthday',
                 width: '20%',
                 editable:true,
+            },{
+                title: '备注',
+                dataIndex: 'remark',
+                width: '20%',
+                editable:true,
             }],
-            colMatch:{name:"姓名",phone:"电话",integral:"积分",birthday:"生日"},
+            colMatch:{name:"姓名",phone:"电话",integral:"积分",birthday:"生日",remark:"备注"},
             activeFn:{
                 page:this.pageChange.bind(this)
             },

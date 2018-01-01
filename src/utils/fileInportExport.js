@@ -84,11 +84,12 @@ export function readFile(file,self) {
         resultData&&resultData.map((item)=>{
             for(let param in colMatch){
                 item[param] = item[colMatch[param]]
-                if(param == "age"){
+                if(param == "integral"){
                     item[param] = parseInt(item[param])
                 }
             }
         })
+        
         self.state.pagination.total = resultData.length
         self.setState({
             fileData:resultData,

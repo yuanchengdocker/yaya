@@ -5,13 +5,14 @@ use yuan;
 DROP TABLE IF EXISTS `member`;
 CREATE TABLE `member` (
   `id` bigint(20) NOT NULL AUTO_INCREMENT,
-  `name` varchar(255) NOT NULL,
+  `name` varchar(255) DEFAULT NULL,
   `sex` int(11) DEFAULT NULL,
   `age` int(11) DEFAULT NULL,
-  `phone` varchar(20) NOT NULL,
+  `phone` varchar(20) DEFAULT NULL,
   `address` varchar(255) DEFAULT NULL,
   `birthday` varchar(255) DEFAULT NULL,
   `integral` int(10) DEFAULT '0',
+  `remark` varchar(255) DEFAULT NULL,
   `create_time` datetime DEFAULT NULL,
   `update_time` datetime DEFAULT NULL,
   `create_user` varchar(45) DEFAULT NULL,
@@ -52,4 +53,5 @@ INSERT INTO `user` VALUES ('10000', 'yuan', '25', '1', null, null, null, null, '
 COMMIT;
 
 SET FOREIGN_KEY_CHECKS = 1;
+
 
