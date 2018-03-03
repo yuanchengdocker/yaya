@@ -60,7 +60,7 @@ router.post(urlPath.user.delete, function(req, res) {
 router.post(urlPath.user.list,checkLogin);
 router.post(urlPath.user.list, function(req, res) {
     var newPage = new dao.page(req.body)
-    var reqUser = JSON.parse(req.cookies.user)
+    var reqUser = JSON.parse(unescape(req.cookies.user))
     var total = 0;
     newPage.query(function(err, page, param) {
         errCheck(err, res);
@@ -151,7 +151,7 @@ function checkLogin(req, res, next) {
     }
     
     var user = decrypt(req.cookies.token)
-    var reqUser = JSON.parse(req.cookies.user)
+    var reqUser = JSON.parse(unescape(req.cookies.user))
     
     if (!user || !reqUser || reqUser.id != user.userId || reqUser.name != user.userName) {
         res.writeHead(403, { 'Content-Type': 'text/html;charset=utf-8' })

@@ -114,6 +114,13 @@ module.exports = {
         contentBase: rootPath + '/dist',
         inline: true,
         hot:true,
-        historyApiFallback: true
+        historyApiFallback: true,
+        proxy: {
+            '/api/': {
+                target: 'http://localhost:8888/',
+                changeOrigin: true,
+                secure: false
+            }
+        }
     }
 }

@@ -115,7 +115,7 @@ class SingleAdd extends React.Component{
                 initialValue:"",
                 rules: [{ required: true, message: '请选择生日 '}],
               })(
-                <DatePicker style={{ width: '100%' }} />
+                <Input style={{ width: '100%' }} placeholder="请输入生日"/>
               )}
             </FormItem>
            
