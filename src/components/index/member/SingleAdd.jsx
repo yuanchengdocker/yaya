@@ -44,7 +44,7 @@ class SingleAdd extends React.Component{
       this.props.form.validateFieldsAndScroll(async (err, values) => {
         if (!err) {
           console.log('Received values of form: ', values);
-          values.birthday = formatDateTime(values.birthday._d.getTime());
+          // values.birthday = formatDateTime(values.birthday._d.getTime());
 
           let {data} = await axiosAjax(["member","add"],values,"post")
           if(data){
@@ -118,7 +118,13 @@ class SingleAdd extends React.Component{
                 <Input style={{ width: '100%' }} placeholder="请输入生日"/>
               )}
             </FormItem>
-           
+            <FormItem label="备注">
+              {getFieldDecorator('remark', {
+                initialValue:"",
+              })(
+                <Input style={{ width: '100%' }} placeholder="请输入备注"/>
+              )}
+            </FormItem>
           </Form>
         </Modal>
       );

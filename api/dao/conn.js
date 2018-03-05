@@ -50,10 +50,11 @@ function Member(member) {
     this.phone = member.phone;
     this.address = member.address;
     this.integral = member.integral;
+    this.remark = member.remark;
 }
 Member.prototype.add = function(callback) {
-    var sql = 'insert into member(name,phone,birthday,create_time) values(?,?,?,now())';
-    excuteSql(sql, [this.name, this.phone, this.birthday], callback)
+    var sql = 'insert into member(name,phone,birthday,remark,create_time) values(?,?,?,?,now())';
+    excuteSql(sql, [this.name, this.phone, this.birthday,this.remark], callback)
 };
 Member.prototype.batchAdd = function(members, callback) {
     var values = "";
@@ -88,9 +89,9 @@ Member.prototype.getMemberbyId = function(callback, valid) {
     excuteSql(sql, arr, callback)
 };
 Member.prototype.updateMemberById = function(callback) {
-    var arr = [this.name, this.phone, this.birthday, this.integral];
+    var arr = [this.name, this.phone, this.birthday, this.integral,this.remark];
 
-    var sql = 'update member set name=?,phone=?,birthday=?,integral=? where id =' + this.id;
+    var sql = 'update member set name=?,phone=?,birthday=?,integral=?,remark=? where id =' + this.id;
     excuteSql(sql, arr, callback)
 }
 
